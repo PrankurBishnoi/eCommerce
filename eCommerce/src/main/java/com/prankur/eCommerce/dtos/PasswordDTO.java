@@ -6,7 +6,7 @@ import com.prankur.eCommerce.validators.ValidPassword;
 @MatchingPassword
 public class PasswordDTO
 {
-    @ValidPassword
+    @ValidPassword(message = "length 8-15,atleast 1 upper,1 lower, 1 digit, 1 special")
     private String password;
     private String confirmPassword;
 

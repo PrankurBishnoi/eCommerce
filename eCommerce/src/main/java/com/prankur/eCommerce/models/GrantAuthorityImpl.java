@@ -53,4 +53,7 @@ public class GrantAuthorityImpl
                 ", users=" + users +
                 '}';
     }
+
+    public GrantAuthorityImpl() {
+    }
 }

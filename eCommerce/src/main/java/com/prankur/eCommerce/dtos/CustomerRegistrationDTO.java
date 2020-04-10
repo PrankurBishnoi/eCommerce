@@ -2,6 +2,7 @@ package com.prankur.eCommerce.dtos;
 
 import com.prankur.eCommerce.models.Address;
 
+import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -26,8 +27,7 @@ public class CustomerRegistrationDTO extends PasswordDTO
 
     private Set<Address> address;
 
-    @NotBlank
-    @Size(max = 10,min = 10,message = "Contact number should contain 10 digits.")
+    @Column(length = 10)
     private long contact;
 
     public String getEmail() {

@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface CustomerRepos extends CrudRepository<Customer,Long>
 {
+    List<Customer> findAll();
 }

@@ -1,5 +1,7 @@
 package com.prankur.eCommerce.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -15,6 +17,7 @@ public class Address
     private long zipCode;
     private String label;   //office,home,etc
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -95,14 +98,12 @@ public class Address
     @Override
     public String toString() {
         return "Address{" +
-                "id=" + id +
-                ", city='" + city + '\'' +
+                "city='" + city + '\'' +
                 ", state='" + state + '\'' +
                 ", country='" + country + '\'' +
                 ", addressLine='" + addressLine + '\'' +
                 ", zipCode=" + zipCode +
                 ", label='" + label + '\'' +
-                ", user=" + user +
                 '}';
     }
 

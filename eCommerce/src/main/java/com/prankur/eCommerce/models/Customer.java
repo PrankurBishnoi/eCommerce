@@ -26,4 +26,14 @@ public class Customer extends User {
     public void setContact(long contact) {
         this.contact = contact;
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "contact=" + contact +
+                '}';
+    }
+
+    public Customer() {
+    }
 }
