@@ -38,15 +38,18 @@ public class Bootstrap implements ApplicationRunner {
     {
         System.out.println("Entering Roles and initial users");
 
-        rolesRepos.save(new GrantAuthorityImpl(Roles.ADMIN.getRoles()));
-        rolesRepos.save(new GrantAuthorityImpl(Roles.CUSTOMER.getRoles()));
-        rolesRepos.save(new GrantAuthorityImpl(Roles.SELLER.getRoles()));
+        rolesRepos.save(new GrantAuthorityImpl("ROLE_"+Roles.CUSTOMER.toString()));
+        rolesRepos.save(new GrantAuthorityImpl("ROLE_"+Roles.SELLER.toString()));
+        rolesRepos.save(new GrantAuthorityImpl("ROLE_"+Roles.ADMIN.toString()));
 
         Set<Address> addresses = new HashSet<>();
         Address address = new Address("dcdsc","sdcsd","sdcdsc","dcdsc",1231,"asddc");
         addresses.add(address);
-//        User user = new User();
-        User user = new User("ABC@gmail.com","ABC","DEF","GHI",passwordEncoder.encode("abc@123"),false,false,addresses, Arrays.asList(new GrantAuthorityImpl(Roles.CUSTOMER.toString())),true,true,true,false,0);
-        userRepos.save(user);
+        Customer customer = new Customer("ABC@gmail.com","ABC","DEF","GHI",
+                passwordEncoder.encode("abc@123"),
+                false,false,addresses,
+                Arrays.asList(new GrantAuthorityImpl("ROLE_"+Roles.CUSTOMER.toString())),
+                true,true,true,false,0,1234567890L);
+        customerRepos.save(customer);
     }
 }

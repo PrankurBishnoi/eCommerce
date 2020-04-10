@@ -1,5 +1,7 @@
 package com.prankur.eCommerce.models;
 
+import com.prankur.eCommerce.enums.Roles;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -9,6 +11,7 @@ public class GrantAuthorityImpl
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long roleId;
+
     private String authority;
 
     @ManyToMany(mappedBy = "authorities")

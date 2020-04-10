@@ -10,9 +10,7 @@ public enum Roles
         this.roles = roles;
     }
 
-    public String getRoles() {
-        return roles;
-    }
+    public String getRoles() { return roles; }
 
     public void setRoles(String roles) {
         this.roles = roles;

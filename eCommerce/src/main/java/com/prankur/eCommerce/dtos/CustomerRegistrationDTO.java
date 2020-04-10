@@ -28,7 +28,7 @@ public class CustomerRegistrationDTO extends PasswordDTO
 
     @NotBlank
     @Size(max = 10,min = 10,message = "Contact number should contain 10 digits.")
-    private String contact;
+    private long contact;
 
     public String getEmail() {
         return email;
@@ -62,11 +62,11 @@ public class CustomerRegistrationDTO extends PasswordDTO
         this.lastName = lastName;
     }
 
-    public String getContact() {
+    public long getContact() {
         return contact;
     }
 
-    public void setContact(String contact) {
+    public void setContact(long contact) {
         this.contact = contact;
     }
 
