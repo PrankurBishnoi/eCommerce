@@ -3,6 +3,8 @@ package com.prankur.eCommerce.models;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "user_id")
@@ -12,8 +14,8 @@ public class Seller extends User
     private String companyContact;
     private String companyName;
 
-    public Seller(String email, String firstName, String middleName, String lastName, String password, String isDeleted, String isActive, boolean isAccountNotExpired, boolean isAccountNonLocked, boolean isCredentialsNonExpired, boolean isEnabled, Integer falseAttemptCount, String gst, String companyContact, String companyName) {
-        super(email, firstName, middleName, lastName, password, isDeleted, isActive, isAccountNotExpired, isAccountNonLocked, isCredentialsNonExpired, isEnabled, falseAttemptCount);
+    public Seller(String email, String firstName, String middleName, String lastName, String password, Boolean isDeleted, Boolean isActive, Set<Address> addresses, List<GrantAuthorityImpl> authorities, boolean isAccountNotExpired, boolean isAccountNonLocked, boolean isCredentialsNonExpired, boolean isEnabled, Integer falseAttemptCount, String gst, String companyContact, String companyName) {
+        super(email, firstName, middleName, lastName, password, isDeleted, isActive, addresses, authorities, isAccountNotExpired, isAccountNonLocked, isCredentialsNonExpired, isEnabled, falseAttemptCount);
         this.gst = gst;
         this.companyContact = companyContact;
         this.companyName = companyName;

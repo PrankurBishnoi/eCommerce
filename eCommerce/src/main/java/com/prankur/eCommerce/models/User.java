@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -19,8 +20,11 @@ public class User implements UserDetails {
     private String middleName;
     private String lastName;
     private String password;
-    private String isDeleted;
-    private String isActive;
+    private Boolean isDeleted;
+    private Boolean isActive;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Address> addresses;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
@@ -34,10 +38,7 @@ public class User implements UserDetails {
     private  boolean isEnabled;
     private Integer falseAttemptCount;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Address> address;
-
-    public User(String email, String firstName, String middleName, String lastName, String password, String isDeleted, String isActive, boolean isAccountNotExpired, boolean isAccountNonLocked, boolean isCredentialsNonExpired, boolean isEnabled, Integer falseAttemptCount) {
+    public User(String email, String firstName, String middleName, String lastName, String password, Boolean isDeleted, Boolean isActive, Set<Address> addresses, List<GrantAuthorityImpl> authorities, boolean isAccountNotExpired, boolean isAccountNonLocked, boolean isCredentialsNonExpired, boolean isEnabled, Integer falseAttemptCount) {
         this.email = email;
         this.firstName = firstName;
         this.middleName = middleName;
@@ -45,6 +46,8 @@ public class User implements UserDetails {
         this.password = password;
         this.isDeleted = isDeleted;
         this.isActive = isActive;
+        this.addresses = addresses;
+        this.authorities = authorities;
         this.isAccountNotExpired = isAccountNotExpired;
         this.isAccountNonLocked = isAccountNonLocked;
         this.isCredentialsNonExpired = isCredentialsNonExpired;
@@ -96,19 +99,19 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public String getIsDeleted() {
+    public Boolean getIsDeleted() {
         return isDeleted;
     }
 
-    public void setIsDeleted(String isDeleted) {
+    public void setIsDeleted(Boolean isDeleted) {
         this.isDeleted = isDeleted;
     }
 
-    public String getIsActive() {
+    public Boolean getIsActive() {
         return isActive;
     }
 
-    public void setIsActive(String isActive) {
+    public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
 
@@ -116,12 +119,12 @@ public class User implements UserDetails {
         this.authorities = authorities;
     }
 
-    public Set<Address> getAddress() {
-        return address;
+    public Set<Address> getAddresses() {
+        return addresses;
     }
 
-    public void setAddress(Set<Address> address) {
-        this.address = address;
+    public void setAddresses(Set<Address> addresses) {
+        this.addresses = addresses;
     }
 
     public User() {
@@ -179,7 +182,17 @@ public class User implements UserDetails {
                 ", isCredentialsNonExpired=" + isCredentialsNonExpired +
                 ", isEnabled=" + isEnabled +
                 ", falseAttemptCount=" + falseAttemptCount +
-                ", address=" + address +
+                ", address=" + addresses +
                 '}';
     }
+
+    public void addAddress(Address address)
+    {
+        if (address!=null)
+            if (address==null)
+                addresses = new HashSet<>();
+            address.setUser(this);
+            addresses.add(address);
+    }
+
 }
