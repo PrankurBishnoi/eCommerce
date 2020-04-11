@@ -21,12 +21,6 @@ public class Seller extends User
         this.companyName = companyName;
     }
 
-    public Seller(String gst, String companyContact, String companyName) {
-        this.gst = gst;
-        this.companyContact = companyContact;
-        this.companyName = companyName;
-    }
-
     public String getGst() {
         return gst;
     }

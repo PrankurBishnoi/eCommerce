@@ -41,20 +41,19 @@ public class CustomerService
                                             passwordEncoder.encode(customerRegistrationDTO.getPassword()),
                                             false,false,
                                             customerRegistrationDTO.getAddress(),
-                                            Arrays.asList(new GrantAuthorityImpl(Roles.CUSTOMER.toString())),
+                                            Arrays.asList(new GrantAuthorityImpl("ROLE_"+Roles.CUSTOMER.toString())),
                                             true,true,true,false,0,
                                             customerRegistrationDTO.getContact()
                                         );
-        if (customerRegistrationDTO.getAddress()!=null)
-        {
-//            for (Address address : customerRegistrationDTO.getAddress())
-//            {
-//                customer.addAddress(address);
-//            }
+        if (customerRegistrationDTO.getAddress()!=null) {
+            for (Address address : customerRegistrationDTO.getAddress())
+            {
+                customer.addAddress(address);
+            }
 
-            Iterator<Address> i = customerRegistrationDTO.getAddress().iterator();
-            while(i.hasNext())
-                customer.addAddress(i.next());
+//            Iterator<Address> i = customerRegistrationDTO.getAddress().iterator();
+//            while (i.hasNext())
+//                customer.addAddress(i.next());
         }
         userRepos.save(customer);
         response = customer;

@@ -188,11 +188,12 @@ public class User implements UserDetails {
 
     public void addAddress(Address address)
     {
-        if (address!=null)
-            if (address==null)
+        if (address!=null) {
+            if (addresses == null)
                 addresses = new HashSet<>();
             address.setUser(this);
             addresses.add(address);
+        }
     }
 
 }
