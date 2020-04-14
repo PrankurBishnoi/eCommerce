@@ -1,10 +1,8 @@
 package com.prankur.eCommerce;
 
 import com.prankur.eCommerce.enums.Roles;
-import com.prankur.eCommerce.models.Address;
-import com.prankur.eCommerce.models.Customer;
-import com.prankur.eCommerce.models.GrantAuthorityImpl;
-import com.prankur.eCommerce.models.User;
+import com.prankur.eCommerce.models.*;
+import com.prankur.eCommerce.repositories.AdminRepos;
 import com.prankur.eCommerce.repositories.CustomerRepos;
 import com.prankur.eCommerce.repositories.RolesRepos;
 import com.prankur.eCommerce.repositories.UserRepos;
@@ -34,9 +32,25 @@ public class Bootstrap implements ApplicationRunner {
     @Autowired
     RolesRepos rolesRepos;
 
+    @Autowired
+    AdminRepos adminRepos;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         System.out.println("Entering Roles and initial users");
+
+        Set<Address> addressess = new HashSet<>();
+        Address addreess = new Address("dcdsc", "sdcsd", "sdcdsc", "dcdsc", 1231, "asddc");
+        addressess.add(addreess);
+        Admin admin = new Admin("prankur4091@gmail.com","This","is","Admin",
+                                passwordEncoder.encode("admin"),addressess,
+                                Arrays.asList(new GrantAuthorityImpl("ROLE_" + Roles.ADMIN.toString())));
+        Iterator<Address> i = addressess.iterator();
+        while(i.hasNext())
+            admin.addAddress(i.next());
+        adminRepos.save(admin);
+        System.out.println("Admin details added");
+
 
         if (false) {
             rolesRepos.save(new GrantAuthorityImpl("ROLE_" + Roles.CUSTOMER.toString()));
@@ -52,9 +66,9 @@ public class Bootstrap implements ApplicationRunner {
                     Arrays.asList(new GrantAuthorityImpl("ROLE_" + Roles.CUSTOMER.toString())),
                     true, true, true, false, 0, 1234567890L);
 
-                Iterator<Address> i = addresses.iterator();
+                Iterator<Address> j = addresses.iterator();
                 while(i.hasNext())
-                    customer.addAddress(i.next());
+                    customer.addAddress(j.next());
             customerRepos.save(customer);
         }
     }

@@ -56,6 +56,16 @@ public class User implements UserDetails {
         this.falseAttemptCount = falseAttemptCount;
     }
 
+    public User(String email, String firstName, String middleName, String lastName, String password, Set<Address> addresses, List<GrantAuthorityImpl> authorities) {
+        this.email = email;
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.lastName = lastName;
+        this.password = password;
+        this.addresses = addresses;
+        this.authorities = authorities;
+    }
+
     public Long getId() {
         return id;
     }
