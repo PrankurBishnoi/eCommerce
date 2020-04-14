@@ -2,21 +2,19 @@ package com.prankur.eCommerce.services;
 
 import com.prankur.eCommerce.dtos.CustomerRegistrationDTO;
 import com.prankur.eCommerce.enums.Roles;
+import com.prankur.eCommerce.events.OnRegistrationCompleteEvent;
+import com.prankur.eCommerce.exceptions.InvalidTokenException;
 import com.prankur.eCommerce.exceptions.ResourceAlreadyExistException;
-import com.prankur.eCommerce.models.Address;
-import com.prankur.eCommerce.models.Customer;
-import com.prankur.eCommerce.models.GrantAuthorityImpl;
-import com.prankur.eCommerce.models.User;
+import com.prankur.eCommerce.models.*;
 import com.prankur.eCommerce.repositories.CustomerRepos;
+import com.prankur.eCommerce.repositories.TokenRepository;
 import com.prankur.eCommerce.repositories.UserRepos;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class CustomerService
@@ -30,6 +28,15 @@ public class CustomerService
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    TokenService tokenService;
+
+    @Autowired
+    TokenRepository tokenRepository;
+
+    @Autowired
+    ApplicationEventPublisher applicationEventPublisher;
+
     public Customer createCustomerAccount(CustomerRegistrationDTO customerRegistrationDTO)
     {
         Customer response = null;
@@ -39,12 +46,13 @@ public class CustomerService
         Customer customer = new Customer(customerRegistrationDTO.getEmail(),
                                             customerRegistrationDTO.getFirstName(),customerRegistrationDTO.getMiddleName(),customerRegistrationDTO.getLastName(),
                                             passwordEncoder.encode(customerRegistrationDTO.getPassword()),
-                                            false,false,
+                                            true,false,
                                             customerRegistrationDTO.getAddress(),
                                             Arrays.asList(new GrantAuthorityImpl("ROLE_"+Roles.CUSTOMER.toString())),
                                             true,true,true,false,0,
                                             customerRegistrationDTO.getContact()
                                         );
+
         if (customerRegistrationDTO.getAddress()!=null) {
             for (Address address : customerRegistrationDTO.getAddress())
             {
@@ -61,12 +69,77 @@ public class CustomerService
 
     }
 
-    public List<Customer> retrieveAllCustomers(){
-        return customerRepos.findAll();
+
+    public void triggerCustomerRegistrationConfirmationEmail(String appUrl, User user, Locale locale)
+    {
+        VerificationToken verificationToken = tokenService.createVerificationToken(user);
+        String token = verificationToken.getToken();
+        System.out.printf(token);
+        applicationEventPublisher.publishEvent(new OnRegistrationCompleteEvent(user,token,appUrl,locale));
     }
 
-    public List<User> retrieveAllUser(){
-        return userRepos.findAll();
+    public String registrationConfirmation(String token, String appUrl, Locale locale)
+    {
+        String response = null;
+
+//        Optional<VerificationToken> verificationTokenDatas = tokenRepository.findByTokenAndIsdeleted(token,false);
+        Optional<VerificationToken> verificationTokenDatas = tokenRepository.findByToken(token);
+
+//        System.out.println(verificationTokenData.getToken());
+        if(verificationTokenDatas.isPresent())
+        {
+            System.out.printf("Verification token is Present");
+            VerificationToken verificationTokenData = verificationTokenDatas.get();
+            System.out.println(verificationTokenData.getExpiryDate());
+            if (verificationTokenData.getIsdeleted()==false) {
+                Calendar calendar = Calendar.getInstance();
+                User user = verificationTokenData.getUser();
+                Date expiryDaeOfToken = verificationTokenData.getExpiryDate();
+                long temp = expiryDaeOfToken.getTime() - calendar.getTime().getTime();
+                verificationTokenData.setIsdeleted(true);
+                tokenRepository.save(verificationTokenData);
+                System.out.printf("time remaining to expiration of Token: " + temp);
+
+                if (temp < 0) {
+                    System.out.println("Expired Token");
+                    triggerCustomerRegistrationConfirmationEmail(appUrl, user, locale);
+                    throw new InvalidTokenException("Your Token has already expired, please check mail for new Token");
+                } else {
+                    System.out.printf("Account Activated");
+                    user.setIsActive(true);
+                    userRepos.save(user);
+                    response = "Your account has been activated";
+                }
+            }
+            else
+            {
+                return response="Account Already Activated";
+            }
+        }
+        else
+        {
+            System.out.println("Invalid Token");
+            throw new InvalidTokenException("Invalid Token");
+        }
+        return response;
     }
+
+
+
+
+    public String getVerificationLink(User user) {
+        return user.getVerificationMail();
+    }
+
+
+
+
+//    public List<Customer> retrieveAllCustomers(){
+//        return customerRepos.findAll();
+//    }
+//
+//    public List<User> retrieveAllUser(){
+//        return userRepos.findAll();
+//    }
 
 }

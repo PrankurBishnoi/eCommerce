@@ -19,7 +19,6 @@ public class CustomerRegistrationDTO extends PasswordDTO
     @NotBlank(message = "First Name is Mandatory")
     private String firstName;
 
-    @NotNull
     private String middleName;
 
     @NotBlank(message = "Last Name is Mandatory")

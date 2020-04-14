@@ -5,6 +5,8 @@ import com.prankur.eCommerce.models.Seller;
 import com.prankur.eCommerce.models.User;
 import com.prankur.eCommerce.services.SellerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,11 +22,13 @@ public class SellerController
     SellerService sellerService;
 
     @PostMapping("/register")
-    Seller register(@Valid @RequestBody SellerRegistrationDTO sellerRegistrationDTO)
+    ResponseEntity<String> register(@Valid @RequestBody SellerRegistrationDTO sellerRegistrationDTO)
     {
+        ResponseEntity<String> responseEntity = null;
         Seller seller= sellerService.createSellerAccount(sellerRegistrationDTO);
+        responseEntity = ResponseEntity.status(HttpStatus.OK).body("Registration for Customer Successful.");
         System.out.printf("Seller Registered.");
-        return seller;
+        return responseEntity;
     }
 
 

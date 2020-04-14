@@ -28,9 +28,8 @@ public class SellerRegistrationDTO  extends PasswordDTO
 //    @Pattern(regexp="^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$",message = "Invalid GST")
     private String gst;
 
-    @NotBlank
     @Column(length = 10)
-    private String companyContact;
+    private long companyContact;
 
     @NotBlank(message = "Company Name cannot be Null")
     private String companyName;
@@ -83,11 +82,11 @@ public class SellerRegistrationDTO  extends PasswordDTO
         this.gst = gst;
     }
 
-    public String getCompanyContact() {
+    public long getCompanyContact() {
         return companyContact;
     }
 
-    public void setCompanyContact(String companyContact) {
+    public void setCompanyContact(long companyContact) {
         this.companyContact = companyContact;
     }
 

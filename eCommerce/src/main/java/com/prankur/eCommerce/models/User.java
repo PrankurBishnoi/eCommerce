@@ -22,6 +22,7 @@ public class User implements UserDetails {
     private String password;
     private Boolean isDeleted;
     private Boolean isActive;
+    private String verificationMail;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Address> addresses;
@@ -125,6 +126,14 @@ public class User implements UserDetails {
 
     public void setAddresses(Set<Address> addresses) {
         this.addresses = addresses;
+    }
+
+    public String getVerificationMail() {
+        return verificationMail;
+    }
+
+    public void setVerificationMail(String verificationMail) {
+        this.verificationMail = verificationMail;
     }
 
     public User() {
