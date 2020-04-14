@@ -43,7 +43,7 @@ public class OnRegistrationCompleteEventListener implements ApplicationListener<
     {
         User user = event.getUser();
         String token = event.getToken();
-        String confirmationUrl = event.getAppUrl() + "/customer/registrationConfirmation?token=" + token;
+        String confirmationUrl = "/customer/registrationConfirmation?token=" + token;
         String recipientAddress = user.getEmail();
         String subject = "Account Activation Key";
         SimpleMailMessage email =new SimpleMailMessage();

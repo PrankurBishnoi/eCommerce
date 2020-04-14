@@ -1,6 +1,7 @@
 package com.prankur.eCommerce.services;
 
 import com.prankur.eCommerce.dtos.CustomerRegistrationDTO;
+import com.prankur.eCommerce.dtos.EmailDTO;
 import com.prankur.eCommerce.enums.Roles;
 import com.prankur.eCommerce.events.OnRegistrationCompleteEvent;
 import com.prankur.eCommerce.exceptions.InvalidTokenException;
@@ -14,6 +15,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Service
@@ -74,7 +76,7 @@ public class CustomerService
     {
         VerificationToken verificationToken = tokenService.createVerificationToken(user);
         String token = verificationToken.getToken();
-        System.out.printf(token);
+        System.out.println(token);
         applicationEventPublisher.publishEvent(new OnRegistrationCompleteEvent(user,token,appUrl,locale));
     }
 
@@ -88,7 +90,7 @@ public class CustomerService
 //        System.out.println(verificationTokenData.getToken());
         if(verificationTokenDatas.isPresent())
         {
-            System.out.printf("Verification token is Present");
+            System.out.println("Verification token is Present");
             VerificationToken verificationTokenData = verificationTokenDatas.get();
             System.out.println(verificationTokenData.getExpiryDate());
             if (verificationTokenData.getIsdeleted()==false) {
@@ -98,14 +100,14 @@ public class CustomerService
                 long temp = expiryDaeOfToken.getTime() - calendar.getTime().getTime();
                 verificationTokenData.setIsdeleted(true);
                 tokenRepository.save(verificationTokenData);
-                System.out.printf("time remaining to expiration of Token: " + temp);
+                System.out.println("time remaining to expiration of Token: " + temp);
 
                 if (temp < 0) {
                     System.out.println("Expired Token");
                     triggerCustomerRegistrationConfirmationEmail(appUrl, user, locale);
                     throw new InvalidTokenException("Your Token has already expired, please check mail for new Token");
                 } else {
-                    System.out.printf("Account Activated");
+                    System.out.println("Account Activated");
                     user.setIsActive(true);
                     userRepos.save(user);
                     response = "Your account has been activated";
@@ -121,6 +123,25 @@ public class CustomerService
             System.out.println("Invalid Token");
             throw new InvalidTokenException("Invalid Token");
         }
+        return response;
+    }
+
+    public String resendVerificationLink(EmailDTO emailDTO, Locale locale)
+    {
+        String response = null;
+
+        User user = userRepos.findByEmail(emailDTO.getEmail());
+        if (user.getIsActive()==true)
+            response = "Account is Already Activated";
+        else
+        {
+            tokenRepository.deleteAllExistingTokenForGivenUser(user);
+            tokenService.createVerificationToken(user);
+            triggerCustomerRegistrationConfirmationEmail("",user,locale);
+            response = "A new Activation link has been sent to your email";
+
+        }
+
         return response;
     }
 

@@ -1,6 +1,7 @@
 package com.prankur.eCommerce.controllers;
 
 import com.prankur.eCommerce.dtos.CustomerRegistrationDTO;
+import com.prankur.eCommerce.dtos.EmailDTO;
 import com.prankur.eCommerce.models.Customer;
 import com.prankur.eCommerce.models.User;
 import com.prankur.eCommerce.services.CustomerService;
@@ -41,12 +42,24 @@ public class CustomerController
     }
 
     @GetMapping("/registrationConfirmation")
-    public String activateCustomer(@RequestParam("token") String token, WebRequest request)
+    ResponseEntity<String> activateCustomer(@RequestParam("token") String token, WebRequest request)
     {
+        ResponseEntity<String> responseEntity = null;
         System.out.printf("20");
         System.out.println(token);
         String response = customerService.registrationConfirmation(token,request.getContextPath(),request.getLocale());
-        return response;
+        responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
+        return responseEntity;
+    }
+
+    @PostMapping("resendVerificationLink")
+    public ResponseEntity<String> resendVerificationCode(@Valid @RequestBody EmailDTO emailDTO,HttpServletRequest httpServletRequest)
+    {
+        ResponseEntity<String> responseEntity = null;
+        Locale locale = httpServletRequest.getLocale();
+        String response = customerService.resendVerificationLink(emailDTO,locale);
+        responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
+        return responseEntity;
     }
 
 

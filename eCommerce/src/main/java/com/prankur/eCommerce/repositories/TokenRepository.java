@@ -16,10 +16,11 @@ public interface TokenRepository extends CrudRepository<VerificationToken,Long>
 //    Optional<VerificationToken> findByTokenAndIsdeleted(String token,int isdeleted);
     Optional<VerificationToken> findByToken(String token);
 
-    //    @Transactional
-//    @Modifying
-//    @Query("update VerificationToken set VerificationToken.isDeleted = true where VerificationToken.user=:user")
-//    void deleteAllExistingTokenForGivenUser(User user);
+    @Transactional
+    @Modifying
+    @Query("update VerificationToken v set v.isdeleted = true where v.user =:user")
+    void deleteAllExistingTokenForGivenUser(User user);
+
 
 
 }
