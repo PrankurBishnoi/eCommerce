@@ -3,7 +3,7 @@ package com.prankur.eCommerce.services;
 import com.prankur.eCommerce.dtos.CustomerRegistrationDTO;
 import com.prankur.eCommerce.dtos.EmailDTO;
 import com.prankur.eCommerce.enums.Roles;
-import com.prankur.eCommerce.events.OnRegistrationCompleteEvent;
+import com.prankur.eCommerce.events.OnCustomerRegistrationEmailEvent;
 import com.prankur.eCommerce.exceptions.InvalidTokenException;
 import com.prankur.eCommerce.exceptions.ResourceAlreadyExistException;
 import com.prankur.eCommerce.models.*;
@@ -15,7 +15,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Service
@@ -77,7 +76,7 @@ public class CustomerService
         VerificationToken verificationToken = tokenService.createVerificationToken(user);
         String token = verificationToken.getToken();
         System.out.println(token);
-        applicationEventPublisher.publishEvent(new OnRegistrationCompleteEvent(user,token,appUrl,locale));
+        applicationEventPublisher.publishEvent(new OnCustomerRegistrationEmailEvent(user,token,appUrl,locale));
     }
 
     public String registrationConfirmation(String token, String appUrl, Locale locale)

@@ -25,7 +25,7 @@ public class SellerRegistrationDTO  extends PasswordDTO
 
     private Set<Address> address;
 
-//    @Pattern(regexp="^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$",message = "Invalid GST")
+    @Pattern(regexp="^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$",message = "Invalid GST")
     private String gst;
 
     @Column(length = 10)

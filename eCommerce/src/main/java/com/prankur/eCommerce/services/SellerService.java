@@ -2,16 +2,18 @@ package com.prankur.eCommerce.services;
 
 import com.prankur.eCommerce.dtos.SellerRegistrationDTO;
 import com.prankur.eCommerce.enums.Roles;
+import com.prankur.eCommerce.events.OnSellerRegistrationEmailEvent;
 import com.prankur.eCommerce.exceptions.ResourceAlreadyExistException;
-import com.prankur.eCommerce.models.Address;
-import com.prankur.eCommerce.models.GrantAuthorityImpl;
-import com.prankur.eCommerce.models.Seller;
+import com.prankur.eCommerce.models.*;
 import com.prankur.eCommerce.repositories.SellerRepos;
+import com.prankur.eCommerce.repositories.TokenRepository;
 import com.prankur.eCommerce.repositories.UserRepos;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 @Service
 public class SellerService
@@ -22,6 +24,14 @@ public class SellerService
     @Autowired
     SellerRepos sellerRepos;
 
+    @Autowired
+    TokenRepository tokenRepository;
+
+    @Autowired
+    TokenService tokenService;
+
+    @Autowired
+    ApplicationEventPublisher applicationEventPublisher;
 
 
     public Seller createSellerAccount(SellerRegistrationDTO sellerRegistrationDTO)
@@ -76,6 +86,13 @@ public class SellerService
         return response;
 
 
+    }
+
+
+    public void triggerSellerRegistrationConfirmationEmail(User user, Locale locale)
+    {
+        System.out.println(1);
+        applicationEventPublisher.publishEvent(new OnSellerRegistrationEmailEvent(user,locale));
     }
 
 

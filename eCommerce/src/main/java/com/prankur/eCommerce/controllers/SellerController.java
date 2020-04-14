@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("seller")
@@ -22,11 +24,13 @@ public class SellerController
     SellerService sellerService;
 
     @PostMapping("/register")
-    ResponseEntity<String> register(@Valid @RequestBody SellerRegistrationDTO sellerRegistrationDTO)
+    ResponseEntity<String> register(@Valid @RequestBody SellerRegistrationDTO sellerRegistrationDTO, HttpServletRequest httpServletRequest)
     {
         ResponseEntity<String> responseEntity = null;
+        Locale locale = httpServletRequest.getLocale();
         Seller seller= sellerService.createSellerAccount(sellerRegistrationDTO);
-        responseEntity = ResponseEntity.status(HttpStatus.OK).body("Registration for Customer Successful.");
+        sellerService.triggerSellerRegistrationConfirmationEmail(seller,locale);
+        responseEntity = ResponseEntity.status(HttpStatus.OK).body("Registration for Seller Successful.");
         System.out.printf("Seller Registered.");
         return responseEntity;
     }
