@@ -121,6 +121,64 @@ public class AdminServices
         return  response;
     }
 
+    public String deActivateCustomer(Long id)
+    {
+        String response = null;
+        Optional<Customer> customers = customerRepos.findById(id);
+        if (customers.isPresent())
+        {
+            Customer customer = customers.get();
+            if (customer.getIsActive()==false)
+            {
+                response ="User Account is not Active.";
+            }
+            else
+            {
+                customer.setIsActive(false);
+                customerRepos.save(customer);
+                String mailBody = "Hey "+customer.getFirstName()+" "+customer.getEmail()+" your Account has been deactivated";
+                Email email = new Email(from,customer.getEmail(),"Account deactivated",mailBody);
+                applicationEventPublisher.publishEvent(new OnAccountActivationEvent(email));
+                response = "Account has been deactivated";
+            }
+        }
+        else {
+            response = "User Not Found";
+            throw new ResourceNotFoundException("User Not Found");
+        }
+
+        return  response;
+    }
+
+    public String deActivateSeller(Long id)
+    {
+        String response = null;
+        Optional<Seller> sellers = sellerRepos.findById(id);
+        if (sellers.isPresent())
+        {
+            Seller seller = sellers.get();
+            if (seller.getIsActive()==false)
+            {
+                response ="User Account is not Active.";
+            }
+            else
+            {
+                seller.setIsActive(false);
+                sellerRepos.save(seller);
+                String mailBody = "Hey "+seller.getFirstName()+"( "+seller.getEmail()+" ), your Account has been activated";
+                Email email = new Email(from,seller.getEmail(),"Account deactivated",mailBody);
+                applicationEventPublisher.publishEvent(new OnAccountActivationEvent(email));
+                response = "Account has been deactivated";
+            }
+        }
+        else {
+            response = "User Not Found";
+            throw new ResourceNotFoundException("User Not Found");
+        }
+
+        return  response;
+    }
+
 
 
 }

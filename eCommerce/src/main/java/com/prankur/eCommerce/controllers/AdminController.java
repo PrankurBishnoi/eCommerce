@@ -56,4 +56,22 @@ public class AdminController
         return responseEntity;
     }
 
+    @PostMapping("/deactivateCustomer/{id}")
+    ResponseEntity<String> deActivateCustomer(@PathVariable Long id)
+    {
+        String response = null;
+        response = adminServices.deActivateCustomer(id);
+        ResponseEntity<String> responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
+        return responseEntity;
+    }
+
+    @PostMapping("/deactivateSeller/{id}")
+    ResponseEntity<String> deActivateSeller(@PathVariable Long id)
+    {
+        String response = null;
+        response = adminServices.deActivateSeller(id);
+        ResponseEntity<String> responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
+        return responseEntity;
+    }
+
 }
