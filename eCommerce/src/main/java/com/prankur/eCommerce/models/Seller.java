@@ -52,4 +52,7 @@ public class Seller extends User
                 ", companyName='" + companyName + '\'' +
                 '}';
     }
+
+    public Seller() {
+    }
 }
