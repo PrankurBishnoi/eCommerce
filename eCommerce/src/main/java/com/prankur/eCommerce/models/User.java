@@ -26,6 +26,15 @@ public class User implements UserDetails {
     private Boolean isDeleted;
     private Boolean isActive;
     private String verificationMail;
+    private boolean isExpired;
+    private boolean isLocked;
+    private  boolean isCredentialsExpired;
+    private  boolean isEnabled;
+    private Integer falseAttemptCount;
+
+    private boolean isAccountNotExpired;
+    private boolean isAccountNonLocked;
+    private  boolean isCredentialsNonExpired;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Address> addresses;
@@ -36,16 +45,6 @@ public class User implements UserDetails {
         joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<GrantAuthorityImpl> grantAuthorities;
-
-    private boolean isExpired;
-    private boolean isLocked;
-    private  boolean isCredentialsExpired;
-    private  boolean isEnabled;
-    private Integer falseAttemptCount;
-
-    private boolean isAccountNotExpired;
-    private boolean isAccountNonLocked;
-    private  boolean isCredentialsNonExpired;
 
     public User(String email, String firstName, String middleName, String lastName, String password, Boolean isDeleted, Boolean isActive, Set<Address> addresses, List<GrantAuthorityImpl> grantAuthorities, boolean isExpired, boolean isLocked, boolean isCredentialsExpired, boolean isEnabled, Integer falseAttemptCount) {
         this.email = email;
@@ -213,7 +212,21 @@ public class User implements UserDetails {
         isEnabled = enabled;
     }
 
+    public boolean isAccountNotExpired() {
+        return isAccountNotExpired;
+    }
 
+    public void setAccountNotExpired(boolean accountNotExpired) {
+        isAccountNotExpired = accountNotExpired;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        isAccountNonLocked = accountNonLocked;
+    }
+
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+        isCredentialsNonExpired = credentialsNonExpired;
+    }
 
     public User() {
     }

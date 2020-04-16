@@ -35,10 +35,10 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        final DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
-        return authenticationProvider;
+        final CustomDaoAuthenticationProvider customDaoAuthenticationProvider = new CustomDaoAuthenticationProvider();
+        customDaoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        customDaoAuthenticationProvider.setPasswordEncoder(bCryptPasswordEncoder());
+        return customDaoAuthenticationProvider;
     }
 
     @Autowired
