@@ -1,17 +1,26 @@
 package com.prankur.eCommerce.services;
 
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.prankur.eCommerce.dtos.AddressDto;
 import com.prankur.eCommerce.dtos.CustomerRegistrationDTO;
 import com.prankur.eCommerce.dtos.EmailDTO;
+import com.prankur.eCommerce.dtos.PasswordResetDto;
 import com.prankur.eCommerce.enums.Roles;
 import com.prankur.eCommerce.events.OnCustomerRegistrationEmailEvent;
 import com.prankur.eCommerce.exceptions.InvalidTokenException;
 import com.prankur.eCommerce.exceptions.ResourceAlreadyExistException;
 import com.prankur.eCommerce.models.*;
+import com.prankur.eCommerce.repositories.AddressRepos;
 import com.prankur.eCommerce.repositories.CustomerRepos;
 import com.prankur.eCommerce.repositories.TokenRepository;
 import com.prankur.eCommerce.repositories.UserRepos;
+import com.prankur.eCommerce.security.AppUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.converter.json.MappingJacksonValue;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +31,12 @@ public class CustomerService
 {
     @Autowired
     UserRepos userRepos;
+
+    @Autowired
+    AddressRepos addressRepos;
+
+    @Autowired
+    UserService userService;
 
     @Autowired
     CustomerRepos customerRepos;
@@ -142,6 +157,155 @@ public class CustomerService
         }
 
         return response;
+    }
+
+    public MappingJacksonValue returnProfile()
+    {
+//        email = "%"+email+"%";
+        Customer customer = giveCurrentLoggedInCustomer();
+        SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept("id","firstName","middleName","lastName","isActive","contact");
+        SimpleFilterProvider simpleFilterProvider = new SimpleFilterProvider();
+        simpleFilterProvider.addFilter("CustomerFilter",simpleBeanPropertyFilter);
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(customer);
+        mappingJacksonValue.setFilters(simpleFilterProvider);
+        System.out.println("Customer Filter profile " + mappingJacksonValue.getValue());
+        return mappingJacksonValue;
+
+    }
+
+    public Set<Address> returnAddress()
+    {
+
+//        User user = userService.giveCurrentLoggedInUser();
+//        Optional<User> users = userRepos.findById(customer.getId());
+//        User user = users.get();
+//        Set<Address> addresses = user.getAddresses();
+//        System.out.println("Customer of address "+ user);
+//        System.out.println("Customer address "+addresses);
+//        email = "%"+email+"%";
+        Customer customer = (Customer) userService.giveCurrentLoggedInUser();
+        Set<Address> addresses1 = customer.getAddresses();
+        SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept("city","state","country","label","zipCode");
+        SimpleFilterProvider simpleFilterProvider = new SimpleFilterProvider();
+        simpleFilterProvider.addFilter("AddressFilter",simpleBeanPropertyFilter);
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(customer);
+        mappingJacksonValue.setFilters(simpleFilterProvider);
+        System.out.println("Customer Filter address " + mappingJacksonValue.getValue()+"   "+customer.getAddresses());
+        return addresses1;
+
+    }
+
+    public String updateProfile(CustomerRegistrationDTO customerRegistrationDTO)
+    {
+        String response = null;
+        Customer customer = giveCurrentLoggedInCustomer();
+        if (customerRegistrationDTO.getFirstName()!=null)
+            customer.setFirstName(customerRegistrationDTO.getFirstName());
+
+        if (customerRegistrationDTO.getMiddleName()!=null)
+            customer.setMiddleName(customerRegistrationDTO.getMiddleName());
+
+        if (customerRegistrationDTO.getLastName()!=null)
+            customer.setLastName(customerRegistrationDTO.getLastName());
+
+        customerRepos.save(customer);
+        return response = "Profile Updated";
+    }
+
+    public String updatePassword(PasswordResetDto passwordResetDto)
+    {
+        String response = null;
+        Customer customer = giveCurrentLoggedInCustomer();
+        String password = passwordResetDto.getPassword();
+        customer.setPassword(password);
+        customerRepos.save(customer);
+        response = "Password Updated";
+        return response;
+    }
+
+    public String addAddress(AddressDto addressDto)
+    {
+        Customer customer = giveCurrentLoggedInCustomer();
+        Address address = new Address(addressDto.getCity(),addressDto.getState(),addressDto.getCountry(),addressDto.getAddressLine(),addressDto.getZipCode(),addressDto.getLabel());
+        customer.addAddress(address);
+        customerRepos.save(customer);
+        return "Address Saved";
+    }
+
+    public String deleteAddress(Long addressId)
+    {
+        String response = null;
+        Customer customer = giveCurrentLoggedInCustomer();
+        Set<Address> addresses = customer.getAddresses();
+        Iterator iterator = addresses.iterator();
+        while(iterator.hasNext())
+        {
+            Address address = (Address) iterator.next();
+            if (address.getId()==addressId)
+            {
+                addresses.remove(address);
+                System.out.println(address);
+                customer.setAddresses(addresses);
+                customerRepos.save(customer);
+                response = "Address Deleted";
+                break;
+            }
+        }
+        if (response ==null)
+            response  = "Address not found";
+        return response;
+    }
+
+    public String updateAddress(AddressDto addressDto)
+    {
+        String response = null;
+        Customer customer = giveCurrentLoggedInCustomer();
+        Address address = null;
+        Set<Address> addresses = customer.getAddresses();
+        for(Address a : addresses) {
+            if (a.getId() == addressDto.getId()) {
+                address = a;
+            }
+        }
+        System.out.println(address);
+        if (addressDto.getCity() != null) {
+            String city = addressDto.getCity();
+            address.setCity(city);
+        }
+        if (addressDto.getCountry() != null) {
+            String country = addressDto.getCountry();
+            address.setCountry(country);
+        }
+        if (addressDto.getLabel() != null) {
+            String houseNumber = addressDto.getLabel();
+            address.setCity(houseNumber);
+        }
+        if (addressDto.getState() != null) {
+            String state = addressDto.getState();
+            address.setCity(state);
+        }
+//        if (addressDto.getZipCode() != null) {
+//            String pinCode = addressDto.getZipCode();
+//            address.setCity(pinCode);
+//        }
+
+        addressRepos.save(address);
+        return "ADDRESS UPDATED";
+
+    }
+
+
+
+
+
+    public Customer giveCurrentLoggedInCustomer()
+    {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        AppUser appUser = (AppUser) securityContext.getAuthentication().getPrincipal();
+        System.out.println(appUser);
+        String email = appUser.getEmail();
+        Customer customer = customerRepos.findByEmail(email);
+        return customer;
     }
 
 

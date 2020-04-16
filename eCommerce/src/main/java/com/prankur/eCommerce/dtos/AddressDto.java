@@ -1,17 +1,8 @@
-package com.prankur.eCommerce.models;
+package com.prankur.eCommerce.dtos;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.*;
-
-@Entity
-@JsonFilter("AddressFilter")
-public class Address
+public class AddressDto
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
     private String city;
     private String state;
     private String country;
@@ -19,12 +10,7 @@ public class Address
     private long zipCode;
     private String label;   //office,home,etc
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    public Address(String city, String state, String country, String addressLine, long zipCode, String label) {
+    public AddressDto(String city, String state, String country, String addressLine, long zipCode, String label) {
         this.city = city;
         this.state = state;
         this.country = country;
@@ -33,11 +19,11 @@ public class Address
         this.label = label;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -89,17 +75,9 @@ public class Address
         this.label = label;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     @Override
     public String toString() {
-        return "Address{" +
+        return "AddressDto{" +
                 "city='" + city + '\'' +
                 ", state='" + state + '\'' +
                 ", country='" + country + '\'' +
@@ -109,6 +87,6 @@ public class Address
                 '}';
     }
 
-    public Address() {
+    public AddressDto() {
     }
 }

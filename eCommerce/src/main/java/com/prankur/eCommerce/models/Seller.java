@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Entity
 @JsonFilter("SellerFilter")
-@PrimaryKeyJoinColumn(name = "user_id")
+@PrimaryKeyJoinColumn(name = "id")
 public class Seller extends User
 {
     private String gst;

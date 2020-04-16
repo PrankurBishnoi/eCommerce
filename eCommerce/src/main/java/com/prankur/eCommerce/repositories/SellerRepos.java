@@ -11,4 +11,5 @@ public interface SellerRepos extends CrudRepository<Seller,Long>
         Boolean existsByGst(String gst);
         Boolean existsByCompanyNameIgnoreCase(String companyName);
         List<Seller> findByEmailLike(Pageable pageable, String email);
+        Seller findByEmail(String email);
 }

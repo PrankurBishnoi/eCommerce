@@ -36,7 +36,7 @@ public class User implements UserDetails {
     private boolean isAccountNonLocked;
     private  boolean isCredentialsNonExpired;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<Address> addresses;
 
 
@@ -145,7 +145,7 @@ public class User implements UserDetails {
     }
 
     public Set<Address> getAddresses() {
-        return addresses;
+        return this.addresses;
     }
 
     public void setAddresses(Set<Address> addresses) {
@@ -263,37 +263,30 @@ public class User implements UserDetails {
         }
     }
 
-    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return grantAuthorities;
     }
 
-    @Override
     public String getPassword() {
         return password;
     }
 
-    @Override
     public String getUsername() {
         return email;
     }
 
-    @Override
     public boolean isAccountNonExpired() {
         return !isExpired;
     }
 
-    @Override
     public boolean isAccountNonLocked() {
         return !isLocked;
     }
 
-    @Override
     public boolean isCredentialsNonExpired() {
         return !isCredentialsExpired;
     }
 
-    @Override
     public boolean isEnabled() {
         return this.isActive;
     }

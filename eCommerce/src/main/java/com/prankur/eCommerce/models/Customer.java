@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Entity
 @JsonFilter("CustomerFilter")
-@PrimaryKeyJoinColumn(name = "user_id")
+@PrimaryKeyJoinColumn(name = "id")
 public class Customer extends User {
 
     private long contact;
@@ -29,6 +29,11 @@ public class Customer extends User {
     public void setContact(long contact) {
         this.contact = contact;
     }
+
+//    public Set<Address> getAddress()
+//    {
+//        return super.getAddresses();
+//    }
 
     @Override
     public String toString() {
