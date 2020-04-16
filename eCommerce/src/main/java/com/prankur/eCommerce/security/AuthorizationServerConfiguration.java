@@ -66,7 +66,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Override
     public void configure(final ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
-                .withClient("live-test")
+                .withClient("clients")
                 .secret(passwordEncoder.encode("abcde"))
                 .authorizedGrantTypes("password","refresh_token")
                 .refreshTokenValiditySeconds(30 * 24 * 3600)

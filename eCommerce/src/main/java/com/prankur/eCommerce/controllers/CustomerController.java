@@ -52,7 +52,7 @@ public class CustomerController
         return responseEntity;
     }
 
-    @PostMapping("resendVerificationLink")
+    @PostMapping("/resendVerificationLink")
     public ResponseEntity<String> resendVerificationCode(@Valid @RequestBody EmailDTO emailDTO,HttpServletRequest httpServletRequest)
     {
         ResponseEntity<String> responseEntity = null;
@@ -61,6 +61,7 @@ public class CustomerController
         responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
         return responseEntity;
     }
+
 
 
 

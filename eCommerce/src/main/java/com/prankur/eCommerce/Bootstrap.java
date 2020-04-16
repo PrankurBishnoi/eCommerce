@@ -43,8 +43,8 @@ public class Bootstrap implements ApplicationRunner {
         Address addreess = new Address("dcdsc", "sdcsd", "sdcdsc", "dcdsc", 1231, "asddc");
         addressess.add(addreess);
         Admin admin = new Admin("prankur4091@gmail.com","This","is","Admin",
-                                passwordEncoder.encode("admin"),addressess,
-                                Arrays.asList(new GrantAuthorityImpl("ROLE_" + Roles.ADMIN.toString())));
+                                passwordEncoder.encode("Admin@4091"),false,true,addressess,
+                                Arrays.asList(new GrantAuthorityImpl(Roles.ADMIN.getRoles())),false,false,false,true,0);
         Iterator<Address> i = addressess.iterator();
         while(i.hasNext())
             admin.addAddress(i.next());

@@ -47,6 +47,7 @@ public class AdminServices
         simpleFilterProvider.addFilter("CustomerFilter",simpleBeanPropertyFilter);
         MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(customerList);
         mappingJacksonValue.setFilters(simpleFilterProvider);
+        System.out.println("Customer Filter " + mappingJacksonValue.getValue());
         return mappingJacksonValue;
 
     }
@@ -60,6 +61,7 @@ public class AdminServices
         filterProvider.addFilter("SellerFilter",simpleBeanPropertyFilter);
         MappingJacksonValue mappingJacksonValue= new MappingJacksonValue(sellerList);
         mappingJacksonValue.setFilters(filterProvider);
+        System.out.println("Seller Filter " + mappingJacksonValue.getValue());
         return mappingJacksonValue;
     }
 

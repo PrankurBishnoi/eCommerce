@@ -1,5 +1,7 @@
 package com.prankur.eCommerce.models;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -10,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
+@JsonFilter("UserFilter")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User implements UserDetails {
     @Id
@@ -27,19 +30,24 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Address> addresses;
 
+
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinTable(name = "users_roles",
         joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<GrantAuthorityImpl> authorities;
+    private List<GrantAuthorityImpl> grantAuthorities;
+
+    private boolean isExpired;
+    private boolean isLocked;
+    private  boolean isCredentialsExpired;
+    private  boolean isEnabled;
+    private Integer falseAttemptCount;
 
     private boolean isAccountNotExpired;
     private boolean isAccountNonLocked;
     private  boolean isCredentialsNonExpired;
-    private  boolean isEnabled;
-    private Integer falseAttemptCount;
 
-    public User(String email, String firstName, String middleName, String lastName, String password, Boolean isDeleted, Boolean isActive, Set<Address> addresses, List<GrantAuthorityImpl> authorities, boolean isAccountNotExpired, boolean isAccountNonLocked, boolean isCredentialsNonExpired, boolean isEnabled, Integer falseAttemptCount) {
+    public User(String email, String firstName, String middleName, String lastName, String password, Boolean isDeleted, Boolean isActive, Set<Address> addresses, List<GrantAuthorityImpl> grantAuthorities, boolean isExpired, boolean isLocked, boolean isCredentialsExpired, boolean isEnabled, Integer falseAttemptCount) {
         this.email = email;
         this.firstName = firstName;
         this.middleName = middleName;
@@ -48,22 +56,25 @@ public class User implements UserDetails {
         this.isDeleted = isDeleted;
         this.isActive = isActive;
         this.addresses = addresses;
-        this.authorities = authorities;
-        this.isAccountNotExpired = isAccountNotExpired;
-        this.isAccountNonLocked = isAccountNonLocked;
-        this.isCredentialsNonExpired = isCredentialsNonExpired;
+        this.grantAuthorities = grantAuthorities;
+        this.isExpired = isExpired;
+        this.isLocked = isLocked;
+        this.isCredentialsExpired = isCredentialsExpired;
         this.isEnabled = isEnabled;
         this.falseAttemptCount = falseAttemptCount;
+        this.isAccountNonLocked=true;
+        this.isAccountNotExpired= true;
+        this.isCredentialsNonExpired=true;
     }
 
-    public User(String email, String firstName, String middleName, String lastName, String password, Set<Address> addresses, List<GrantAuthorityImpl> authorities) {
+    public User(String email, String firstName, String middleName, String lastName, String password, Set<Address> addresses, List<GrantAuthorityImpl> grantAuthorities) {
         this.email = email;
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
         this.password = password;
         this.addresses = addresses;
-        this.authorities = authorities;
+        this.grantAuthorities = grantAuthorities;
     }
 
     public Long getId() {
@@ -126,8 +137,12 @@ public class User implements UserDetails {
         this.isActive = isActive;
     }
 
-    public void setAuthorities(List<GrantAuthorityImpl> authorities) {
-        this.authorities = authorities;
+    public List<GrantAuthorityImpl> getGrantAuthorities() {
+        return grantAuthorities;
+    }
+
+    public void setGrantAuthorities(List<GrantAuthorityImpl> grantAuthorities) {
+        this.grantAuthorities = grantAuthorities;
     }
 
     public Set<Address> getAddresses() {
@@ -138,6 +153,26 @@ public class User implements UserDetails {
         this.addresses = addresses;
     }
 
+    public boolean isExpired() {
+        return isExpired;
+    }
+
+    public void setExpired(boolean expired) {
+        isExpired = expired;
+    }
+
+    public void setLocked(boolean locked) {
+        isLocked = locked;
+    }
+
+    public Integer getFalseAttemptCount() {
+        return falseAttemptCount;
+    }
+
+    public void setFalseAttemptCount(Integer falseAttemptCount) {
+        this.falseAttemptCount = falseAttemptCount;
+    }
+
     public String getVerificationMail() {
         return verificationMail;
     }
@@ -146,43 +181,43 @@ public class User implements UserDetails {
         this.verificationMail = verificationMail;
     }
 
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
+
+    public boolean isLocked() {
+        return isLocked;
+    }
+
+    public boolean isCredentialsExpired() {
+        return isCredentialsExpired;
+    }
+
+    public void setCredentialsExpired(boolean credentialsExpired) {
+        isCredentialsExpired = credentialsExpired;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
+
+
     public User() {
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
-    public String getPassword() {
-        return null;
-    }
-
-    @Override
-    public String getUsername() {
-        return null;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
-    }
 
     @Override
     public String toString() {
@@ -195,10 +230,10 @@ public class User implements UserDetails {
                 ", password='" + password + '\'' +
                 ", isDeleted='" + isDeleted + '\'' +
                 ", isActive='" + isActive + '\'' +
-                ", authorities=" + authorities +
-                ", isAccountNotExpired=" + isAccountNotExpired +
-                ", isAccountNonLocked=" + isAccountNonLocked +
-                ", isCredentialsNonExpired=" + isCredentialsNonExpired +
+                ", grantauthorities=" + grantAuthorities +
+                ", isAccountNotExpired=" + isExpired +
+                ", isAccountNonLocked=" + isLocked +
+                ", isCredentialsNonExpired=" + isCredentialsExpired +
                 ", isEnabled=" + isEnabled +
                 ", falseAttemptCount=" + falseAttemptCount +
                 ", address=" + addresses +
@@ -215,4 +250,38 @@ public class User implements UserDetails {
         }
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return grantAuthorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return !isExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !isLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return !isCredentialsExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.isActive;
+    }
 }

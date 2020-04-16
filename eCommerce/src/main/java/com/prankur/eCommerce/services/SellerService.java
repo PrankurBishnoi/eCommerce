@@ -10,6 +10,7 @@ import com.prankur.eCommerce.repositories.TokenRepository;
 import com.prankur.eCommerce.repositories.UserRepos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -33,6 +34,8 @@ public class SellerService
     @Autowired
     ApplicationEventPublisher applicationEventPublisher;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public Seller createSellerAccount(SellerRegistrationDTO sellerRegistrationDTO)
     {
@@ -65,11 +68,11 @@ public class SellerService
 
         Seller seller = new Seller(sellerRegistrationDTO.getEmail(),
                                     sellerRegistrationDTO.getFirstName(),sellerRegistrationDTO.getMiddleName(),sellerRegistrationDTO.getLastName(),
-                                    sellerRegistrationDTO.getPassword(),
+                                    passwordEncoder.encode(sellerRegistrationDTO.getPassword()),
                                     false,false,
                                     sellerRegistrationDTO.getAddress(),
-                                    Arrays.asList(new GrantAuthorityImpl("ROLE_"+Roles.SELLER.toString())),
-                                    true,true,true,false,0,
+                                    Arrays.asList(new GrantAuthorityImpl(Roles.SELLER.getRoles())),
+                                    false,false,false,false,0,
                                     sellerRegistrationDTO.getGst(),
                                     sellerRegistrationDTO.getCompanyContact(),
                                     sellerRegistrationDTO.getCompanyName()

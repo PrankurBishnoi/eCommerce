@@ -1,20 +1,22 @@
 package com.prankur.eCommerce.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prankur.eCommerce.enums.Roles;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class GrantAuthorityImpl
-{
+public class GrantAuthorityImpl implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long roleId;
 
     private String authority;
 
-    @ManyToMany(mappedBy = "authorities")
+    @JsonIgnore
+    @ManyToMany(mappedBy = "grantAuthorities")
     private List<User> users;
 
     public GrantAuthorityImpl(String authority) {

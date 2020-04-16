@@ -49,8 +49,8 @@ public class CustomerService
                                             passwordEncoder.encode(customerRegistrationDTO.getPassword()),
                                             true,false,
                                             customerRegistrationDTO.getAddress(),
-                                            Arrays.asList(new GrantAuthorityImpl("ROLE_"+Roles.CUSTOMER.toString())),
-                                            true,true,true,false,0,
+                                            Arrays.asList(new GrantAuthorityImpl(Roles.CUSTOMER.getRoles())),
+                                            false,false,false,false,0,
                                             customerRegistrationDTO.getContact()
                                         );
 
