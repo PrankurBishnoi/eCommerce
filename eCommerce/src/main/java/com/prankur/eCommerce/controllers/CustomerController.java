@@ -28,7 +28,11 @@ public class CustomerController
     @Autowired
     CustomerService customerService;
 
-
+    @GetMapping("/home")
+    public String customerHome()
+    {
+        return "customer home";
+    }
 
     @PostMapping("/register")
     ResponseEntity<String> register(@Valid @RequestBody CustomerRegistrationDTO customerRegistrationDTO, HttpServletRequest httpServletRequest)

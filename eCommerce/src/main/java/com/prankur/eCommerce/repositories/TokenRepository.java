@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface TokenRepository extends CrudRepository<VerificationToken,Long>
 {
-//    Optional<VerificationToken> findByTokenAndIsdeleted(String token, Boolean isdeleted);
+    Optional<VerificationToken> findByTokenAndIsdeleted(String token, Boolean isdeleted);
 //    Optional<VerificationToken> findByTokenAndIsdeleted(String token,int isdeleted);
     Optional<VerificationToken> findByToken(String token);
 

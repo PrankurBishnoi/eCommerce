@@ -24,6 +24,12 @@ public class SellerController
     @Autowired
     SellerService sellerService;
 
+    @GetMapping("/home")
+    public String sellerHome()
+    {
+        return "Seller home";
+    }
+
     @PostMapping("/register")
     ResponseEntity<String> register(@Valid @RequestBody SellerRegistrationDTO sellerRegistrationDTO, HttpServletRequest httpServletRequest)
     {
