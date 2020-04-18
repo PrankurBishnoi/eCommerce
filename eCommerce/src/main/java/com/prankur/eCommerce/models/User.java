@@ -76,6 +76,8 @@ public class User implements UserDetails {
         this.grantAuthorities = grantAuthorities;
     }
 
+
+
     public Long getId() {
         return id;
     }

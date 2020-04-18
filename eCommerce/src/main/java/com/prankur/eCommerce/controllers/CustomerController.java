@@ -79,9 +79,9 @@ public class CustomerController
     }
 
     @GetMapping("/address")
-    public Set<Address> customerAddress()
+    public MappingJacksonValue returnCustomerAddress()
     {
-        Set<Address> addresses = customerService.returnAddress();
+        MappingJacksonValue addresses = customerService.returnAddress();
         return addresses;
     }
 

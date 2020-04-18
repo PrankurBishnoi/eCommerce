@@ -173,9 +173,8 @@ public class CustomerService
 
     }
 
-    public Set<Address> returnAddress()
+    public MappingJacksonValue returnAddress()
     {
-
 //        User user = userService.giveCurrentLoggedInUser();
 //        Optional<User> users = userRepos.findById(customer.getId());
 //        User user = users.get();
@@ -183,15 +182,17 @@ public class CustomerService
 //        System.out.println("Customer of address "+ user);
 //        System.out.println("Customer address "+addresses);
 //        email = "%"+email+"%";
-        Customer customer = (Customer) userService.giveCurrentLoggedInUser();
+        Customer customer = giveCurrentLoggedInCustomer();
+        System.out.println("Customer in give address: "+customer);
         Set<Address> addresses1 = customer.getAddresses();
         SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept("city","state","country","label","zipCode");
         SimpleFilterProvider simpleFilterProvider = new SimpleFilterProvider();
         simpleFilterProvider.addFilter("AddressFilter",simpleBeanPropertyFilter);
-        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(customer);
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(addresses1);
+        System.out.println(addresses1);
         mappingJacksonValue.setFilters(simpleFilterProvider);
         System.out.println("Customer Filter address " + mappingJacksonValue.getValue()+"   "+customer.getAddresses());
-        return addresses1;
+        return mappingJacksonValue;
 
     }
 
@@ -305,6 +306,7 @@ public class CustomerService
         System.out.println(appUser);
         String email = appUser.getEmail();
         Customer customer = customerRepos.findByEmail(email);
+        System.out.println("Current logged in customer" + email);
         return customer;
     }
 
