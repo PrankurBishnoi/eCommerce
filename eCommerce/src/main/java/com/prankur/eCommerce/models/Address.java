@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @JsonFilter("AddressFilter")
-public class Address
+public class Address implements Serializable
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

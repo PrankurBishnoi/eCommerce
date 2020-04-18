@@ -30,7 +30,7 @@ public class Customer extends User {
         this.contact = contact;
     }
 
-//    public Set<Address> getAddress()
+//    public Set<Address> getAddresses()
 //    {
 //        return super.getAddresses();
 //    }

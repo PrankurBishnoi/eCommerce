@@ -5,8 +5,6 @@ import com.prankur.eCommerce.models.Address;
 import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Set;
 
 
@@ -24,7 +22,7 @@ public class CustomerRegistrationDTO extends PasswordDTO
     @NotBlank(message = "Last Name is Mandatory")
     private String lastName;
 
-    private Set<Address> address;
+    private Set<Address> addresses;
 
     @Column(length = 10)
     private long contact;
@@ -69,12 +67,12 @@ public class CustomerRegistrationDTO extends PasswordDTO
         this.contact = contact;
     }
 
-    public Set<Address> getAddress() {
-        return address;
+    public Set<Address> getAddresses() {
+        return addresses;
     }
 
-    public void setAddress(Set<Address> address) {
-        this.address = address;
+    public void setAddresses(Set<Address> addresses) {
+        this.addresses = addresses;
     }
 
     public CustomerRegistrationDTO()

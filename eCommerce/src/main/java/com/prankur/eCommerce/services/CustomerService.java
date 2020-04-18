@@ -57,28 +57,36 @@ public class CustomerService
     {
         Customer response = null;
         Boolean doesCustomerExist = userRepos.existsByEmail(customerRegistrationDTO.getEmail());
+//        System.out.println(customerRegistrationDTO.getAddresses());
         if (doesCustomerExist)
             throw new ResourceAlreadyExistException("Email Already Exists");
         Customer customer = new Customer(customerRegistrationDTO.getEmail(),
                                             customerRegistrationDTO.getFirstName(),customerRegistrationDTO.getMiddleName(),customerRegistrationDTO.getLastName(),
                                             passwordEncoder.encode(customerRegistrationDTO.getPassword()),
                                             true,false,
-                                            customerRegistrationDTO.getAddress(),
+                                            customerRegistrationDTO.getAddresses(),
                                             Arrays.asList(new GrantAuthorityImpl(Roles.CUSTOMER.getRoles())),
                                             false,false,false,false,0,
                                             customerRegistrationDTO.getContact()
                                         );
 
-        if (customerRegistrationDTO.getAddress()!=null) {
-            for (Address address : customerRegistrationDTO.getAddress())
-            {
-                customer.addAddress(address);
-            }
+        if (customerRegistrationDTO.getAddresses()!=null)
+        {
+//            for (Address address : customerRegistrationDTO.getAddresses())
+//            {
+//                customer.addAddress(address);
+//            }
 
-//            Iterator<Address> i = customerRegistrationDTO.getAddress().iterator();
-//            while (i.hasNext())
-//                customer.addAddress(i.next());
+            Iterator<Address> i = customerRegistrationDTO.getAddresses().iterator();
+//            System.out.println(customerRegistrationDTO.getAddresses());
+            while (i.hasNext())
+                customer.addAddress(i.next());
         }
+
+//        Iterator<Address> i = addressess.iterator();
+//        while(i.hasNext())
+//            admin.addAddress(i.next());
+
         userRepos.save(customer);
         response = customer;
         return response;

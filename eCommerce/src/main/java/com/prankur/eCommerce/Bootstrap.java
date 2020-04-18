@@ -40,7 +40,7 @@ public class Bootstrap implements ApplicationRunner {
         System.out.println("Entering Roles and initial users");
 
         Set<Address> addressess = new HashSet<>();
-        Address addreess = new Address("dcdsc", "sdcsd", "sdcdsc", "dcdsc", 1231, "asddc");
+        Address addreess  = new Address("a", "aa", "aaa", "aaaa", 1231, "aaaaa");
         addressess.add(addreess);
         Admin admin = new Admin("prankur4091@gmail.com","This","is","Admin",
                                 passwordEncoder.encode("Admin@4091"),false,true,addressess,
@@ -67,6 +67,7 @@ public class Bootstrap implements ApplicationRunner {
                     true, true, true, false, 0, 1234567890L);
 
                 Iterator<Address> j = addresses.iterator();
+
                 while(i.hasNext())
                     customer.addAddress(j.next());
             customerRepos.save(customer);
