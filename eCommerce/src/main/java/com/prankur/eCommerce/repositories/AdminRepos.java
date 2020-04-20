@@ -1,6 +1,6 @@
 package com.prankur.eCommerce.repositories;
 
-import com.prankur.eCommerce.models.Admin;
+import com.prankur.eCommerce.models.users.Admin;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

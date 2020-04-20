@@ -1,6 +1,6 @@
 package com.prankur.eCommerce.events;
 
-import com.prankur.eCommerce.models.User;
+import com.prankur.eCommerce.models.users.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;

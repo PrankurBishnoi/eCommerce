@@ -11,6 +11,8 @@ import com.prankur.eCommerce.events.OnCustomerRegistrationEmailEvent;
 import com.prankur.eCommerce.exceptions.InvalidTokenException;
 import com.prankur.eCommerce.exceptions.ResourceAlreadyExistException;
 import com.prankur.eCommerce.models.*;
+import com.prankur.eCommerce.models.users.Customer;
+import com.prankur.eCommerce.models.users.User;
 import com.prankur.eCommerce.repositories.AddressRepos;
 import com.prankur.eCommerce.repositories.CustomerRepos;
 import com.prankur.eCommerce.repositories.TokenRepository;

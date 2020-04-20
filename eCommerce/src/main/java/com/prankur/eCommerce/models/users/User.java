@@ -1,7 +1,9 @@
-package com.prankur.eCommerce.models;
+package com.prankur.eCommerce.models.users;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.prankur.eCommerce.models.Address;
+import com.prankur.eCommerce.models.GrantAuthorityImpl;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

@@ -2,6 +2,8 @@ package com.prankur.eCommerce;
 
 import com.prankur.eCommerce.enums.Roles;
 import com.prankur.eCommerce.models.*;
+import com.prankur.eCommerce.models.users.Admin;
+import com.prankur.eCommerce.models.users.Customer;
 import com.prankur.eCommerce.repositories.AdminRepos;
 import com.prankur.eCommerce.repositories.CustomerRepos;
 import com.prankur.eCommerce.repositories.RolesRepos;

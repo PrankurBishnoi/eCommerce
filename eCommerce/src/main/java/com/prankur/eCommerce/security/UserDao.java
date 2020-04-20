@@ -1,16 +1,11 @@
 package com.prankur.eCommerce.security;
 
-import com.prankur.eCommerce.models.GrantAuthorityImpl;
-import com.prankur.eCommerce.models.User;
+import com.prankur.eCommerce.models.users.User;
 import com.prankur.eCommerce.repositories.UserRepos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class UserDao {

@@ -1,7 +1,7 @@
 package com.prankur.eCommerce.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.prankur.eCommerce.enums.Roles;
+import com.prankur.eCommerce.models.users.User;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;

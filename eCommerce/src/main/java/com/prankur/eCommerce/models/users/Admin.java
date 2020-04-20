@@ -1,4 +1,7 @@
-package com.prankur.eCommerce.models;
+package com.prankur.eCommerce.models.users;
+
+import com.prankur.eCommerce.models.Address;
+import com.prankur.eCommerce.models.GrantAuthorityImpl;
 
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;

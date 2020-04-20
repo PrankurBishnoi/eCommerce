@@ -1,6 +1,5 @@
 package com.prankur.eCommerce.events;
 
-import com.prankur.eCommerce.models.User;
 import com.prankur.eCommerce.utils.Email;
 import org.springframework.context.ApplicationEvent;
 

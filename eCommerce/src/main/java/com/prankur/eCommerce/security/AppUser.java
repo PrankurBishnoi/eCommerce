@@ -2,7 +2,7 @@ package com.prankur.eCommerce.security;
 
 import com.prankur.eCommerce.models.Address;
 import com.prankur.eCommerce.models.GrantAuthorityImpl;
-import com.prankur.eCommerce.models.User;
+import com.prankur.eCommerce.models.users.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

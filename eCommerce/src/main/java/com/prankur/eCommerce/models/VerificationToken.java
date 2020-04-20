@@ -1,5 +1,7 @@
 package com.prankur.eCommerce.models;
 
+import com.prankur.eCommerce.models.users.User;
+
 import javax.persistence.*;
 import java.util.Calendar;
 import java.sql.Date;

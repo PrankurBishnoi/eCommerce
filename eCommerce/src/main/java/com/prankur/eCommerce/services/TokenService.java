@@ -1,6 +1,6 @@
 package com.prankur.eCommerce.services;
 
-import com.prankur.eCommerce.models.User;
+import com.prankur.eCommerce.models.users.User;
 import com.prankur.eCommerce.models.VerificationToken;
 import com.prankur.eCommerce.repositories.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,8 +3,7 @@ package com.prankur.eCommerce.services;
 import com.prankur.eCommerce.dtos.PasswordResetDto;
 import com.prankur.eCommerce.events.ForgotPasswordCompleteEvent;
 import com.prankur.eCommerce.events.ResetPasswordEvent;
-import com.prankur.eCommerce.exceptions.InvalidTokenException;
-import com.prankur.eCommerce.models.User;
+import com.prankur.eCommerce.models.users.User;
 import com.prankur.eCommerce.models.VerificationToken;
 import com.prankur.eCommerce.repositories.TokenRepository;
 import com.prankur.eCommerce.repositories.UserRepos;
@@ -18,7 +17,6 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Service

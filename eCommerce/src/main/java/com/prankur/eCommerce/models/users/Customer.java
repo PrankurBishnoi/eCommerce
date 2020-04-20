@@ -1,9 +1,11 @@
-package com.prankur.eCommerce.models;
+package com.prankur.eCommerce.models.users;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
+import com.prankur.eCommerce.models.Address;
+import com.prankur.eCommerce.models.GrantAuthorityImpl;
+import com.prankur.eCommerce.models.product.ProductReview;
 
 import javax.persistence.*;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
 
@@ -13,6 +15,9 @@ import java.util.Set;
 public class Customer extends User {
 
     private long contact;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    private Set<ProductReview> productReviews;
 
     public Customer(String email, String firstName, String middleName, String lastName, String password,
                     Boolean isDeleted, Boolean isActive, Set<Address> address, List<GrantAuthorityImpl> authorities, boolean isExpired, boolean isLocked, boolean isCredentialsExpired, boolean isEnabled, Integer falseAttemptCount,
@@ -34,6 +39,15 @@ public class Customer extends User {
 //    {
 //        return super.getAddresses();
 //    }
+
+
+    public Set<ProductReview> getProductReviews() {
+        return productReviews;
+    }
+
+    public void setProductReviews(Set<ProductReview> productReviews) {
+        this.productReviews = productReviews;
+    }
 
     @Override
     public String toString() {

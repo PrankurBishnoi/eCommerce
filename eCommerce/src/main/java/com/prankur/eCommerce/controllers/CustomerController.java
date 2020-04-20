@@ -4,9 +4,7 @@ import com.prankur.eCommerce.dtos.AddressDto;
 import com.prankur.eCommerce.dtos.CustomerRegistrationDTO;
 import com.prankur.eCommerce.dtos.EmailDTO;
 import com.prankur.eCommerce.dtos.PasswordResetDto;
-import com.prankur.eCommerce.models.Address;
-import com.prankur.eCommerce.models.Customer;
-import com.prankur.eCommerce.models.User;
+import com.prankur.eCommerce.models.users.Customer;
 import com.prankur.eCommerce.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,9 +15,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 @RestController
 @RequestMapping("customer")
@@ -43,7 +39,7 @@ public class CustomerController
         Customer customer = customerService.createCustomerAccount(customerRegistrationDTO);
         String appUrl = httpServletRequest.getContextPath();
         customerService.triggerCustomerRegistrationConfirmationEmail(appUrl,customer,locale);
-        responseEntity = ResponseEntity.status(HttpStatus.OK).body("Registration for Customer Successful,    " + customerService.getVerificationLink(customer));
+        responseEntity = ResponseEntity.status(HttpStatus.CREATED).body("Registration for Customer Successful,    " + customerService.getVerificationLink(customer));
         System.out.println(customer);
         System.out.println("Customer Registered");
 

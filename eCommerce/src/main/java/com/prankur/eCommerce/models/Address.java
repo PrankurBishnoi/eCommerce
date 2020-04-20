@@ -2,6 +2,7 @@ package com.prankur.eCommerce.models;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.prankur.eCommerce.models.users.User;
 
 import javax.persistence.*;
 import java.io.Serializable;

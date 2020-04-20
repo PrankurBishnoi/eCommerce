@@ -1,19 +1,16 @@
 package com.prankur.eCommerce.controllers;
 
 import com.prankur.eCommerce.dtos.PasswordResetDto;
-import com.prankur.eCommerce.models.User;
+import com.prankur.eCommerce.models.users.User;
 import com.prankur.eCommerce.repositories.UserRepos;
 import com.prankur.eCommerce.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Locale;
 
 @RestController
 @RequestMapping("user")
