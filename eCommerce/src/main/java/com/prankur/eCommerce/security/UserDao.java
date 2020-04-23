@@ -1,7 +1,7 @@
 package com.prankur.eCommerce.security;
 
 import com.prankur.eCommerce.models.users.User;
-import com.prankur.eCommerce.repositories.usersReposes.UserRepos;
+import com.prankur.eCommerce.repositories.usersRepositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,17 +11,17 @@ import org.springframework.stereotype.Repository;
 public class UserDao {
 
     @Autowired
-    UserRepos userRepos;
+    UserRepository userRepository;
 
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 //    List<User> userList = Arrays.asList(
-//            new User("user", passwordEncoder.encode("pass"), Arrays.asList(new GrantAuthorityImpl("ROLE_USER"))),
-//            new User("admin", passwordEncoder.encode("pass"), Arrays.asList(new GrantAuthorityImpl("ROLE_ADMIN"))));
+//            new User("user", passwordEncoder.encode("pass"), Arrays.asList(new Roles("ROLE_USER"))),
+//            new User("admin", passwordEncoder.encode("pass"), Arrays.asList(new Roles("ROLE_ADMIN"))));
 
     AppUser loadUserByUsername(String username)
     {
-        User user = userRepos.findByEmail(username);
+        User user = userRepository.findByEmail(username);
         System.out.println("122"+user.getUsername()+user.getPassword());
         System.out.println(user.getPassword());
 //        Optional<User> userOptional = userList.stream().filter(e -> e.getUsername().equals(username)).findFirst();

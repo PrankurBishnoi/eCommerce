@@ -1,4 +1,4 @@
-package com.prankur.eCommerce.controllers.usersControllers;
+package com.prankur.eCommerce.controllers;
 
 import com.prankur.eCommerce.services.usersServices.AdminServices;
 import org.springframework.beans.factory.annotation.Autowired;

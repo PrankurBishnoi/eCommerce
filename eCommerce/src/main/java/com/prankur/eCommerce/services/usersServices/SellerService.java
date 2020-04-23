@@ -5,17 +5,17 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.prankur.eCommerce.cos.AddressCO;
 import com.prankur.eCommerce.cos.PasswordResetCO;
 import com.prankur.eCommerce.cos.SellerRegistrationCO;
-import com.prankur.eCommerce.enums.Roles;
+import com.prankur.eCommerce.enums.Role;
 import com.prankur.eCommerce.events.OnSellerRegistrationEmailEvent;
 import com.prankur.eCommerce.exceptions.ResourceAlreadyExistException;
 import com.prankur.eCommerce.models.*;
-import com.prankur.eCommerce.models.users.Customer;
 import com.prankur.eCommerce.models.users.Seller;
 import com.prankur.eCommerce.models.users.User;
-import com.prankur.eCommerce.repositories.AddressRepos;
-import com.prankur.eCommerce.repositories.usersReposes.SellerRepos;
+import com.prankur.eCommerce.repositories.AddressRepository;
+import com.prankur.eCommerce.repositories.RolesRepository;
+import com.prankur.eCommerce.repositories.usersRepositories.SellerRepository;
 import com.prankur.eCommerce.repositories.TokenRepository;
-import com.prankur.eCommerce.repositories.usersReposes.UserRepos;
+import com.prankur.eCommerce.repositories.usersRepositories.UserRepository;
 import com.prankur.eCommerce.security.AppUser;
 import com.prankur.eCommerce.services.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,16 +35,19 @@ import java.util.Set;
 public class SellerService
 {
     @Autowired
-    UserRepos userRepos;
+    UserRepository userRepository;
 
     @Autowired
-    SellerRepos sellerRepos;
+    SellerRepository sellerRepository;
 
     @Autowired
-    AddressRepos addressRepos;
+    AddressRepository addressRepository;
 
     @Autowired
     TokenRepository tokenRepository;
+
+    @Autowired
+    RolesRepository rolesRepository;
 
     @Autowired
     TokenService tokenService;
@@ -58,9 +61,9 @@ public class SellerService
     public Seller createSellerAccount(SellerRegistrationCO sellerRegistrationCO)
     {
         Seller response = null;
-        Boolean doesEmailExist = userRepos.existsByEmail(sellerRegistrationCO.getEmail());
-        Boolean doesGSTExist = sellerRepos.existsByGst(sellerRegistrationCO.getGst());
-        Boolean doesCompanyNameExist = sellerRepos.existsByCompanyNameIgnoreCase(sellerRegistrationCO.getCompanyName());
+        Boolean doesEmailExist = userRepository.existsByEmail(sellerRegistrationCO.getEmail());
+        Boolean doesGSTExist = sellerRepository.existsByGst(sellerRegistrationCO.getGst());
+        Boolean doesCompanyNameExist = sellerRepository.existsByCompanyNameIgnoreCase(sellerRegistrationCO.getCompanyName());
 
         int flag = 0;
         if (doesEmailExist)
@@ -89,7 +92,7 @@ public class SellerService
                                     passwordEncoder.encode(sellerRegistrationCO.getPassword()),
                                     false,false,
                                     sellerRegistrationCO.getAddress(),
-                                    Arrays.asList(new GrantAuthorityImpl(Roles.SELLER.getRoles())),
+                                    Arrays.asList(rolesRepository.findByAuthority(Role.SELLER.getRoles())),
                                     false,false,false,false,0,
                                     sellerRegistrationCO.getGst(),
                                     sellerRegistrationCO.getCompanyContact(),
@@ -102,7 +105,7 @@ public class SellerService
                 seller.addAddress(address);
             }
         }
-        sellerRepos.save(seller);
+        sellerRepository.save(seller);
         response = seller;
         return response;
 
@@ -166,7 +169,7 @@ public class SellerService
         if (sellerRegistrationCO.getGst()!=null)
             seller.setGst(sellerRegistrationCO.getGst());
 
-        sellerRepos.save(seller);
+        sellerRepository.save(seller);
         return response = "Profile Updated";
     }
 
@@ -176,7 +179,7 @@ public class SellerService
         Seller seller = giveCurrentLoggedInSeller();
         String password = passwordResetCO.getPassword();
         seller.setPassword(password);
-        sellerRepos.save(seller);
+        sellerRepository.save(seller);
         response = "Password Updated";
         return response;
     }
@@ -186,7 +189,7 @@ public class SellerService
         Seller seller = giveCurrentLoggedInSeller();
         Address address = new Address(addressCO.getCity(), addressCO.getState(), addressCO.getCountry(), addressCO.getAddressLine(), addressCO.getZipCode(), addressCO.getLabel());
         seller.addAddress(address);
-        sellerRepos.save(seller);
+        sellerRepository.save(seller);
         return "Address Saved";
     }
 
@@ -204,7 +207,7 @@ public class SellerService
                 addresses.remove(address);
                 System.out.println(address);
                 seller.setAddresses(addresses);
-                sellerRepos.save(seller);
+                sellerRepository.save(seller);
                 response = "Address Deleted";
                 break;
             }
@@ -247,7 +250,7 @@ public class SellerService
 //            address.setCity(pinCode);
 //        }
 
-        addressRepos.save(address);
+        addressRepository.save(address);
         return "ADDRESS UPDATED";
 
     }
@@ -262,7 +265,7 @@ public class SellerService
         AppUser appUser = (AppUser) securityContext.getAuthentication().getPrincipal();
         System.out.println(appUser);
         String email = appUser.getEmail();
-        Seller seller = sellerRepos.findByEmail(email);
+        Seller seller = sellerRepository.findByEmail(email);
         return seller;
     }
 

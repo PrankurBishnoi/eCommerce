@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class GrantAuthorityImpl implements GrantedAuthority {
+public class Roles implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long roleId;
@@ -16,10 +16,10 @@ public class GrantAuthorityImpl implements GrantedAuthority {
     private String authority;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "grantAuthorities")
+    @ManyToMany(mappedBy = "roles")
     private List<User> users;
 
-    public GrantAuthorityImpl(String authority) {
+    public Roles(String authority) {
         this.authority = authority;
     }
 
@@ -49,13 +49,13 @@ public class GrantAuthorityImpl implements GrantedAuthority {
 
     @Override
     public String toString() {
-        return "GrantAuthorityImpl{" +
+        return "Roles{" +
                 "roleId=" + roleId +
                 ", authority='" + authority + '\'' +
                 ", users=" + users +
                 '}';
     }
 
-    public GrantAuthorityImpl() {
+    public Roles() {
     }
 }

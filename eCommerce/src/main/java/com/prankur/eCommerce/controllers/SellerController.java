@@ -1,4 +1,4 @@
-package com.prankur.eCommerce.controllers.usersControllers;
+package com.prankur.eCommerce.controllers;
 
 import com.prankur.eCommerce.cos.AddressCO;
 import com.prankur.eCommerce.cos.PasswordResetCO;

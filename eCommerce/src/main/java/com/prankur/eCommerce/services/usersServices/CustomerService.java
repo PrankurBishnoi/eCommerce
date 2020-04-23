@@ -6,17 +6,18 @@ import com.prankur.eCommerce.cos.AddressCO;
 import com.prankur.eCommerce.cos.CustomerRegistrationCO;
 import com.prankur.eCommerce.cos.EmailCO;
 import com.prankur.eCommerce.cos.PasswordResetCO;
-import com.prankur.eCommerce.enums.Roles;
+import com.prankur.eCommerce.enums.Role;
 import com.prankur.eCommerce.events.OnCustomerRegistrationEmailEvent;
 import com.prankur.eCommerce.exceptions.InvalidTokenException;
 import com.prankur.eCommerce.exceptions.ResourceAlreadyExistException;
 import com.prankur.eCommerce.models.*;
 import com.prankur.eCommerce.models.users.Customer;
 import com.prankur.eCommerce.models.users.User;
-import com.prankur.eCommerce.repositories.AddressRepos;
-import com.prankur.eCommerce.repositories.usersReposes.CustomerRepos;
+import com.prankur.eCommerce.repositories.AddressRepository;
+import com.prankur.eCommerce.repositories.RolesRepository;
+import com.prankur.eCommerce.repositories.usersRepositories.CustomerRepository;
 import com.prankur.eCommerce.repositories.TokenRepository;
-import com.prankur.eCommerce.repositories.usersReposes.UserRepos;
+import com.prankur.eCommerce.repositories.usersRepositories.UserRepository;
 import com.prankur.eCommerce.security.AppUser;
 import com.prankur.eCommerce.services.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,16 +34,16 @@ import java.util.*;
 public class CustomerService
 {
     @Autowired
-    UserRepos userRepos;
+    UserRepository userRepository;
 
     @Autowired
-    AddressRepos addressRepos;
+    AddressRepository addressRepository;
 
     @Autowired
     UserService userService;
 
     @Autowired
-    CustomerRepos customerRepos;
+    CustomerRepository customerRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -54,12 +55,15 @@ public class CustomerService
     TokenRepository tokenRepository;
 
     @Autowired
+    RolesRepository rolesRepository;
+
+    @Autowired
     ApplicationEventPublisher applicationEventPublisher;
 
     public Customer createCustomerAccount(CustomerRegistrationCO customerRegistrationCO)
     {
         Customer response = null;
-        Boolean doesCustomerExist = userRepos.existsByEmail(customerRegistrationCO.getEmail());
+        Boolean doesCustomerExist = userRepository.existsByEmail(customerRegistrationCO.getEmail());
 //        System.out.println(customerRegistrationCO.getAddresses());
         if (doesCustomerExist)
             throw new ResourceAlreadyExistException("Email Already Exists");
@@ -68,7 +72,7 @@ public class CustomerService
                                             passwordEncoder.encode(customerRegistrationCO.getPassword()),
                                             true,false,
                                             customerRegistrationCO.getAddresses(),
-                                            Arrays.asList(new GrantAuthorityImpl(Roles.CUSTOMER.getRoles())),
+                                            Arrays.asList(rolesRepository.findByAuthority(Role.CUSTOMER.getRoles())),
                                             false,false,false,false,0,
                                             customerRegistrationCO.getContact()
                                         );
@@ -90,7 +94,7 @@ public class CustomerService
 //        while(i.hasNext())
 //            admin.addAddress(i.next());
 
-        userRepos.save(customer);
+        userRepository.save(customer);
         response = customer;
         return response;
 
@@ -134,7 +138,7 @@ public class CustomerService
                 } else {
                     System.out.println("Account Activated");
                     user.setIsActive(true);
-                    userRepos.save(user);
+                    userRepository.save(user);
                     response = "Your account has been activated";
                 }
             }
@@ -155,7 +159,7 @@ public class CustomerService
     {
         String response = null;
 
-        User user = userRepos.findByEmail(emailCO.getEmail());
+        User user = userRepository.findByEmail(emailCO.getEmail());
         if (user.getIsActive()==true)
             response = "Account is Already Activated";
         else
@@ -187,7 +191,7 @@ public class CustomerService
     public MappingJacksonValue returnAddress()
     {
 //        User user = userService.giveCurrentLoggedInUser();
-//        Optional<User> users = userRepos.findById(customer.getId());
+//        Optional<User> users = userRepository.findById(customer.getId());
 //        User user = users.get();
 //        Set<Address> addresses = user.getAddresses();
 //        System.out.println("Customer of address "+ user);
@@ -220,7 +224,7 @@ public class CustomerService
         if (customerRegistrationCO.getLastName()!=null)
             customer.setLastName(customerRegistrationCO.getLastName());
 
-        customerRepos.save(customer);
+        customerRepository.save(customer);
         return response = "Profile Updated";
     }
 
@@ -230,7 +234,7 @@ public class CustomerService
         Customer customer = giveCurrentLoggedInCustomer();
         String password = passwordResetCO.getPassword();
         customer.setPassword(password);
-        customerRepos.save(customer);
+        customerRepository.save(customer);
         response = "Password Updated";
         return response;
     }
@@ -240,7 +244,7 @@ public class CustomerService
         Customer customer = giveCurrentLoggedInCustomer();
         Address address = new Address(addressCO.getCity(), addressCO.getState(), addressCO.getCountry(), addressCO.getAddressLine(), addressCO.getZipCode(), addressCO.getLabel());
         customer.addAddress(address);
-        customerRepos.save(customer);
+        customerRepository.save(customer);
         return "Address Saved";
     }
 
@@ -258,7 +262,7 @@ public class CustomerService
                 addresses.remove(address);
                 System.out.println(address);
                 customer.setAddresses(addresses);
-                customerRepos.save(customer);
+                customerRepository.save(customer);
                 response = "Address Deleted";
                 break;
             }
@@ -301,7 +305,7 @@ public class CustomerService
 //            address.setCity(pinCode);
 //        }
 
-        addressRepos.save(address);
+        addressRepository.save(address);
         return "ADDRESS UPDATED";
 
     }
@@ -316,7 +320,7 @@ public class CustomerService
         AppUser appUser = (AppUser) securityContext.getAuthentication().getPrincipal();
         System.out.println(appUser);
         String email = appUser.getEmail();
-        Customer customer = customerRepos.findByEmail(email);
+        Customer customer = customerRepository.findByEmail(email);
         System.out.println("Current logged in customer" + email);
         return customer;
     }
@@ -332,11 +336,11 @@ public class CustomerService
 
 
 //    public List<Customer> retrieveAllCustomers(){
-//        return customerRepos.findAll();
+//        return customerRepository.findAll();
 //    }
 //
 //    public List<User> retrieveAllUser(){
-//        return userRepos.findAll();
+//        return userRepository.findAll();
 //    }
 
 }

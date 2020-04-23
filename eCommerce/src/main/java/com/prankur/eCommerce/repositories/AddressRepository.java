@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Repository
-public interface AddressRepos extends CrudRepository<Address,Long>
+public interface AddressRepository extends CrudRepository<Address,Long>
 {
     @Query(value = "select * from address where user_id = :userId",nativeQuery = true)
     Optional<Address> findByUserId(Long userId);

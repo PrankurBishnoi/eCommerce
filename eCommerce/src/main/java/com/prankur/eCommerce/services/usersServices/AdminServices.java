@@ -6,8 +6,8 @@ import com.prankur.eCommerce.events.OnAccountActivationEvent;
 import com.prankur.eCommerce.exceptions.ResourceNotFoundException;
 import com.prankur.eCommerce.models.users.Customer;
 import com.prankur.eCommerce.models.users.Seller;
-import com.prankur.eCommerce.repositories.usersReposes.CustomerRepos;
-import com.prankur.eCommerce.repositories.usersReposes.SellerRepos;
+import com.prankur.eCommerce.repositories.usersRepositories.CustomerRepository;
+import com.prankur.eCommerce.repositories.usersRepositories.SellerRepository;
 import com.prankur.eCommerce.utils.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,10 +26,10 @@ import java.util.Optional;
 public class AdminServices
 {
     @Autowired
-    CustomerRepos customerRepos;
+    CustomerRepository customerRepository;
 
     @Autowired
-    SellerRepos sellerRepos;
+    SellerRepository sellerRepository;
 
     @Value("${spring.mail.from.email}")
     private String from;
@@ -41,7 +41,7 @@ public class AdminServices
     {
 //        email = "%"+email+"%";
         Pageable pageable = PageRequest.of(pageNumber,pageSize, Sort.by(new Sort.Order(Sort.Direction.DESC,sortBy)));
-        List<Customer> customerList = customerRepos.findByEmailLike(pageable,email);
+        List<Customer> customerList = customerRepository.findByEmailLike(pageable,email);
         SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept("id","email","firstName","middleName","lastName","isActive");
         SimpleFilterProvider simpleFilterProvider = new SimpleFilterProvider();
         simpleFilterProvider.addFilter("CustomerFilter",simpleBeanPropertyFilter);
@@ -55,7 +55,7 @@ public class AdminServices
     public MappingJacksonValue returnAllSellersFiltered(Integer pageNumber, Integer pagesize, String sortBy, String email)
     {
         Pageable pageable = PageRequest.of(pageNumber,pagesize, Sort.by(new Sort.Order(Sort.Direction.DESC,sortBy)));
-        List<Seller> sellerList = sellerRepos.findByEmailLike(pageable,email);
+        List<Seller> sellerList = sellerRepository.findByEmailLike(pageable,email);
         SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept("id","firstName","middleName","lastName","email","isActive","companyName","addresses","companyContact");
         SimpleFilterProvider filterProvider= new SimpleFilterProvider();
         filterProvider.addFilter("SellerFilter",simpleBeanPropertyFilter);
@@ -68,7 +68,7 @@ public class AdminServices
     public String activateCustomer(Long id)
     {
         String response = null;
-        Optional<Customer> customers = customerRepos.findById(id);
+        Optional<Customer> customers = customerRepository.findById(id);
         if (customers.isPresent())
         {
             Customer customer = customers.get();
@@ -79,7 +79,7 @@ public class AdminServices
             else
             {
                 customer.setIsActive(true);
-                customerRepos.save(customer);
+                customerRepository.save(customer);
                 String mailBody = "Hey "+customer.getFirstName()+" "+customer.getEmail()+" your Account has been activated";
                 Email email = new Email(from,customer.getEmail(),"Account Activated",mailBody);
                 applicationEventPublisher.publishEvent(new OnAccountActivationEvent(email));
@@ -97,7 +97,7 @@ public class AdminServices
     public String activateSeller(Long id)
     {
         String response = null;
-        Optional<Seller> sellers = sellerRepos.findById(id);
+        Optional<Seller> sellers = sellerRepository.findById(id);
         if (sellers.isPresent())
         {
             Seller seller = sellers.get();
@@ -108,7 +108,7 @@ public class AdminServices
             else
             {
                 seller.setIsActive(true);
-                sellerRepos.save(seller);
+                sellerRepository.save(seller);
                 String mailBody = "Hey "+seller.getFirstName()+"( "+seller.getEmail()+" ), your Account has been activated";
                 Email email = new Email(from,seller.getEmail(),"Account Activated",mailBody);
                 applicationEventPublisher.publishEvent(new OnAccountActivationEvent(email));
@@ -126,7 +126,7 @@ public class AdminServices
     public String deActivateCustomer(Long id)
     {
         String response = null;
-        Optional<Customer> customers = customerRepos.findById(id);
+        Optional<Customer> customers = customerRepository.findById(id);
         if (customers.isPresent())
         {
             Customer customer = customers.get();
@@ -137,7 +137,7 @@ public class AdminServices
             else
             {
                 customer.setIsActive(false);
-                customerRepos.save(customer);
+                customerRepository.save(customer);
                 String mailBody = "Hey "+customer.getFirstName()+" "+customer.getEmail()+" your Account has been deactivated";
                 Email email = new Email(from,customer.getEmail(),"Account deactivated",mailBody);
                 applicationEventPublisher.publishEvent(new OnAccountActivationEvent(email));
@@ -155,7 +155,7 @@ public class AdminServices
     public String deActivateSeller(Long id)
     {
         String response = null;
-        Optional<Seller> sellers = sellerRepos.findById(id);
+        Optional<Seller> sellers = sellerRepository.findById(id);
         if (sellers.isPresent())
         {
             Seller seller = sellers.get();
@@ -166,7 +166,7 @@ public class AdminServices
             else
             {
                 seller.setIsActive(false);
-                sellerRepos.save(seller);
+                sellerRepository.save(seller);
                 String mailBody = "Hey "+seller.getFirstName()+"( "+seller.getEmail()+" ), your Account has been activated";
                 Email email = new Email(from,seller.getEmail(),"Account deactivated",mailBody);
                 applicationEventPublisher.publishEvent(new OnAccountActivationEvent(email));

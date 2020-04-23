@@ -1,4 +1,4 @@
-package com.prankur.eCommerce.repositories.categoryReposes;
+package com.prankur.eCommerce.repositories.categoryRepositories;
 
 import com.prankur.eCommerce.models.category.Category;
 import org.springframework.data.repository.CrudRepository;

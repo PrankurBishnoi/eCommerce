@@ -6,7 +6,7 @@ import com.prankur.eCommerce.events.ResetPasswordEvent;
 import com.prankur.eCommerce.models.users.User;
 import com.prankur.eCommerce.models.VerificationToken;
 import com.prankur.eCommerce.repositories.TokenRepository;
-import com.prankur.eCommerce.repositories.usersReposes.UserRepos;
+import com.prankur.eCommerce.repositories.usersRepositories.UserRepository;
 import com.prankur.eCommerce.security.AppUser;
 import com.prankur.eCommerce.services.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class UserService
     JdbcTokenStore jdbcTokenStore;
 
     @Autowired
-    UserRepos userRepos;
+    UserRepository userRepository;
 
     @Autowired
     TokenService tokenService;
@@ -75,7 +75,7 @@ public class UserService
             {
                 user.setPassword(passwordEncoder.encode(password));
                 user.setIsActive(true);
-                userRepos.save(user);
+                userRepository.save(user);
                 tokenRepository.deleteById(tokenId);
                 response = "Password has been reset. Try to login";
                 applicationEventPublisher.publishEvent(new ResetPasswordEvent(user));
@@ -117,7 +117,7 @@ public class UserService
         AppUser appUser = (AppUser) securityContext.getAuthentication().getPrincipal();
         System.out.println(appUser.getEmail() + "   "+ appUser.getAddresses());
         String email = appUser.getEmail();
-        user = userRepos.findByEmail(email);
+        user = userRepository.findByEmail(email);
         System.out.println(user.getAddresses());
 
         return user;

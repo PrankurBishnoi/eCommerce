@@ -1,8 +1,8 @@
-package com.prankur.eCommerce.controllers.usersControllers;
+package com.prankur.eCommerce.controllers;
 
 import com.prankur.eCommerce.cos.PasswordResetCO;
 import com.prankur.eCommerce.models.users.User;
-import com.prankur.eCommerce.repositories.usersReposes.UserRepos;
+import com.prankur.eCommerce.repositories.usersRepositories.UserRepository;
 import com.prankur.eCommerce.services.usersServices.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -20,7 +20,7 @@ public class UserController
     TokenStore tokenStore;
 
     @Autowired
-    UserRepos userRepos;
+    UserRepository userRepository;
 
     @Autowired
     UserService userService;
@@ -29,7 +29,7 @@ public class UserController
     public String forgotPassword(@PathVariable String email, HttpServletRequest httpServletRequest)
     {
         String locale = httpServletRequest.getLocale().toString();
-        User user = userRepos.findByEmail(email);
+        User user = userRepository.findByEmail(email);
         if(user!=null)
         {
             System.out.println(user);

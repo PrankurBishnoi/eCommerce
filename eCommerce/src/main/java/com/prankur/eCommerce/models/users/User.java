@@ -1,9 +1,8 @@
 package com.prankur.eCommerce.models.users;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prankur.eCommerce.models.Address;
-import com.prankur.eCommerce.models.GrantAuthorityImpl;
+import com.prankur.eCommerce.models.Roles;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -42,13 +41,13 @@ public class User implements UserDetails {
     private Set<Address> addresses;
 
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
         joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<GrantAuthorityImpl> grantAuthorities;
+    private List<Roles> roles;
 
-    public User(String email, String firstName, String middleName, String lastName, String password, Boolean isDeleted, Boolean isActive, Set<Address> addresses, List<GrantAuthorityImpl> grantAuthorities, boolean isExpired, boolean isLocked, boolean isCredentialsExpired, boolean isEnabled, Integer falseAttemptCount) {
+    public User(String email, String firstName, String middleName, String lastName, String password, Boolean isDeleted, Boolean isActive, Set<Address> addresses, List<Roles> roles, boolean isExpired, boolean isLocked, boolean isCredentialsExpired, boolean isEnabled, Integer falseAttemptCount) {
         this.email = email;
         this.firstName = firstName;
         this.middleName = middleName;
@@ -57,7 +56,7 @@ public class User implements UserDetails {
         this.isDeleted = isDeleted;
         this.isActive = isActive;
         this.addresses = addresses;
-        this.grantAuthorities = grantAuthorities;
+        this.roles = roles;
         this.isExpired = isExpired;
         this.isLocked = isLocked;
         this.isCredentialsExpired = isCredentialsExpired;
@@ -68,14 +67,14 @@ public class User implements UserDetails {
         this.isCredentialsNonExpired=true;
     }
 
-    public User(String email, String firstName, String middleName, String lastName, String password, Set<Address> addresses, List<GrantAuthorityImpl> grantAuthorities) {
+    public User(String email, String firstName, String middleName, String lastName, String password, Set<Address> addresses, List<Roles> roles) {
         this.email = email;
         this.firstName = firstName;
         this.middleName = middleName;
         this.lastName = lastName;
         this.password = password;
         this.addresses = addresses;
-        this.grantAuthorities = grantAuthorities;
+        this.roles = roles;
     }
 
 
@@ -140,12 +139,12 @@ public class User implements UserDetails {
         this.isActive = isActive;
     }
 
-    public List<GrantAuthorityImpl> getGrantAuthorities() {
-        return grantAuthorities;
+    public List<Roles> getRoles() {
+        return roles;
     }
 
-    public void setGrantAuthorities(List<GrantAuthorityImpl> grantAuthorities) {
-        this.grantAuthorities = grantAuthorities;
+    public void setRoles(List<Roles> roles) {
+        this.roles = roles;
     }
 
     public Set<Address> getAddresses() {
@@ -247,7 +246,7 @@ public class User implements UserDetails {
                 ", password='" + password + '\'' +
                 ", isDeleted='" + isDeleted + '\'' +
                 ", isActive='" + isActive + '\'' +
-                ", grantauthorities=" + grantAuthorities +
+                ", roles=" + roles +
                 ", isAccountNotExpired=" + isExpired +
                 ", isAccountNonLocked=" + isLocked +
                 ", isCredentialsNonExpired=" + isCredentialsExpired +
@@ -268,7 +267,7 @@ public class User implements UserDetails {
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return grantAuthorities;
+        return roles;
     }
 
     public String getPassword() {

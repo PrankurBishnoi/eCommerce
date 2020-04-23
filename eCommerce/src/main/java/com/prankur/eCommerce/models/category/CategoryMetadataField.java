@@ -14,10 +14,13 @@ public class CategoryMetadataField
     @OneToMany(mappedBy = "categoryMetadataField",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<MetadataFieldValues> metadataFieldValues;
 
-    public CategoryMetadataField(long id, String name, Set<MetadataFieldValues> metadataFieldValues) {
-        this.id = id;
+    public CategoryMetadataField( String name, Set<MetadataFieldValues> metadataFieldValues) {
         this.name = name;
         this.metadataFieldValues = metadataFieldValues;
+    }
+
+    public CategoryMetadataField(String name) {
+        this.name = name;
     }
 
     public long getId() {

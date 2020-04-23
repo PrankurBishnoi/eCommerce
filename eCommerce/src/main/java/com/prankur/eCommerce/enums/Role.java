@@ -1,12 +1,12 @@
 package com.prankur.eCommerce.enums;
 
-public enum Roles
+public enum Role
 {
     CUSTOMER("ROLE_CUSTOMER"),SELLER("ROLE_SELLER"),ADMIN("ROLE_ADMIN");
 
     private String roles;
 
-    Roles(String roles) {
+    Role(String roles) {
         this.roles = roles;
     }
 

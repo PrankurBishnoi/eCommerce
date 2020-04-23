@@ -2,7 +2,7 @@ package com.prankur.eCommerce.models.users;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.prankur.eCommerce.models.Address;
-import com.prankur.eCommerce.models.GrantAuthorityImpl;
+import com.prankur.eCommerce.models.Roles;
 import com.prankur.eCommerce.models.product.ProductReview;
 
 import javax.persistence.*;
@@ -22,7 +22,7 @@ public class Customer extends User {
     private Set<ProductReview> productReviews;
 
     public Customer(String email, String firstName, String middleName, String lastName, String password,
-                    Boolean isDeleted, Boolean isActive, Set<Address> address, List<GrantAuthorityImpl> authorities, boolean isExpired, boolean isLocked, boolean isCredentialsExpired, boolean isEnabled, Integer falseAttemptCount,
+                    Boolean isDeleted, Boolean isActive, Set<Address> address, List<Roles> authorities, boolean isExpired, boolean isLocked, boolean isCredentialsExpired, boolean isEnabled, Integer falseAttemptCount,
                     long contact)
     {
         super(email, firstName, middleName, lastName, password, isDeleted, isActive, address, authorities, isExpired, isLocked, isCredentialsExpired, isEnabled, falseAttemptCount);

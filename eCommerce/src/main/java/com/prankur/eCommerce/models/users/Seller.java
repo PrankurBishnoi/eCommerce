@@ -2,7 +2,7 @@ package com.prankur.eCommerce.models.users;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.prankur.eCommerce.models.Address;
-import com.prankur.eCommerce.models.GrantAuthorityImpl;
+import com.prankur.eCommerce.models.Roles;
 import com.prankur.eCommerce.models.product.Product;
 
 import javax.persistence.*;
@@ -21,7 +21,7 @@ public class Seller extends User
     @OneToMany(mappedBy = "seller",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<Product> products;
 
-    public Seller(String email, String firstName, String middleName, String lastName, String password, Boolean isDeleted, Boolean isActive, Set<Address> addresses, List<GrantAuthorityImpl> authorities, boolean isExpired, boolean isLocked, boolean isCredentialsExpired, boolean isEnabled, Integer falseAttemptCount, String gst, long companyContact, String companyName) {
+    public Seller(String email, String firstName, String middleName, String lastName, String password, Boolean isDeleted, Boolean isActive, Set<Address> addresses, List<Roles> authorities, boolean isExpired, boolean isLocked, boolean isCredentialsExpired, boolean isEnabled, Integer falseAttemptCount, String gst, long companyContact, String companyName) {
         super(email, firstName, middleName, lastName, password, isDeleted, isActive, addresses, authorities, isExpired, isLocked, isCredentialsExpired, isEnabled, falseAttemptCount);
         this.gst = gst;
         this.companyContact = companyContact;

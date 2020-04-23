@@ -2,7 +2,7 @@ package com.prankur.eCommerce.security;
 
 import com.prankur.eCommerce.events.OnAccountLLockedEvent;
 import com.prankur.eCommerce.models.users.User;
-import com.prankur.eCommerce.repositories.usersReposes.UserRepos;
+import com.prankur.eCommerce.repositories.usersRepositories.UserRepository;
 import com.prankur.eCommerce.services.usersServices.UserService;
 import com.prankur.eCommerce.utils.Email;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class CustomDaoAuthenticationProvider extends DaoAuthenticationProvider
     private PasswordEncoder  passwordEncoder;
 
     @Autowired
-    private UserRepos userRepos;
+    private UserRepository userRepository;
 
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
@@ -60,7 +60,7 @@ public class CustomDaoAuthenticationProvider extends DaoAuthenticationProvider
         {
             logger.debug("Given password doesn't match with the database password");
             System.out.println("username from userdetails is "+userDetails.getUsername());
-            User user = userRepos.findByEmail(userDetails.getUsername());
+            User user = userRepository.findByEmail(userDetails.getUsername());
             Integer temp = user.getFalseAttemptCount();
             user.setFalseAttemptCount(++temp);
             if (temp>=3)
@@ -78,7 +78,7 @@ public class CustomDaoAuthenticationProvider extends DaoAuthenticationProvider
                 applicationEventPublisher.publishEvent(new OnAccountLLockedEvent(email));
 
             }
-            userRepos.save(user);
+            userRepository.save(user);
 
             throw new BadCredentialsException("Bad Credentials");
         }
@@ -89,9 +89,9 @@ public class CustomDaoAuthenticationProvider extends DaoAuthenticationProvider
     @Override
     protected Authentication createSuccessAuthentication(Object principal, Authentication authentication, UserDetails userDetails)
     {
-        User user = userRepos.findByEmail(userDetails.getUsername());
+        User user = userRepository.findByEmail(userDetails.getUsername());
         user.setFalseAttemptCount(0);
-        userRepos.save(user);
+        userRepository.save(user);
         return super.createSuccessAuthentication(principal, authentication, userDetails);
 
     }

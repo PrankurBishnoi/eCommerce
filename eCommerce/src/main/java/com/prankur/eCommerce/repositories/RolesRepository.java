@@ -1,9 +1,11 @@
 package com.prankur.eCommerce.repositories;
 
-import com.prankur.eCommerce.models.GrantAuthorityImpl;
+import com.prankur.eCommerce.models.Roles;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RolesRepos extends CrudRepository<GrantAuthorityImpl,Long> {
+public interface RolesRepository extends CrudRepository<Roles,Long>
+{
+    Roles findByAuthority(String authority);
 }

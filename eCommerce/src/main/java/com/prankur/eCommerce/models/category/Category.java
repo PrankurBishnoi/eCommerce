@@ -32,6 +32,12 @@ public class Category
         this.products = products;
     }
 
+    public Category(String name, Set<Product> products, Set<MetadataFieldValues> metadataFieldValues) {
+        this.name = name;
+        this.products = products;
+        this.metadataFieldValues = metadataFieldValues;
+    }
+
     public Category(String name) {
         this.name = name;
     }

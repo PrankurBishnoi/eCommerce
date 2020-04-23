@@ -1,4 +1,4 @@
-package com.prankur.eCommerce.repositories.usersReposes;
+package com.prankur.eCommerce.repositories.usersRepositories;
 
 import com.prankur.eCommerce.models.users.Seller;
 import org.springframework.data.domain.Pageable;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface SellerRepos extends CrudRepository<Seller,Long>
+public interface SellerRepository extends CrudRepository<Seller,Long>
 {
         Boolean existsByGst(String gst);
         Boolean existsByCompanyNameIgnoreCase(String companyName);

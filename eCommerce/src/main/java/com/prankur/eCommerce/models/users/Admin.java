@@ -1,7 +1,7 @@
 package com.prankur.eCommerce.models.users;
 
 import com.prankur.eCommerce.models.Address;
-import com.prankur.eCommerce.models.GrantAuthorityImpl;
+import com.prankur.eCommerce.models.Roles;
 
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -12,11 +12,11 @@ import java.util.Set;
 @PrimaryKeyJoinColumn(name = "user_id")
 public class Admin extends User
 {
-//    public Admin(String email, String firstName, String middleName, String lastName, String password, Set<Address> addresses, List<GrantAuthorityImpl> authorities) {
+//    public Admin(String email, String firstName, String middleName, String lastName, String password, Set<Address> addresses, List<Roles> authorities) {
 //        super(email, firstName, middleName, lastName, password, addresses, authorities);
 //    }
 
-    public Admin(String email, String firstName, String middleName, String lastName, String password, Boolean isDeleted, Boolean isActive, Set<Address> addresses, List<GrantAuthorityImpl> grantAuthorities, boolean isExpired, boolean isLocked, boolean isCredentialsExpired, boolean isEnabled, Integer falseAttemptCount) {
+    public Admin(String email, String firstName, String middleName, String lastName, String password, Boolean isDeleted, Boolean isActive, Set<Address> addresses, List<Roles> grantAuthorities, boolean isExpired, boolean isLocked, boolean isCredentialsExpired, boolean isEnabled, Integer falseAttemptCount) {
         super(email, firstName, middleName, lastName, password, isDeleted, isActive, addresses, grantAuthorities, isExpired, isLocked, isCredentialsExpired, isEnabled, falseAttemptCount);
     }
 

@@ -1,7 +1,7 @@
 package com.prankur.eCommerce.security;
 
 import com.prankur.eCommerce.models.Address;
-import com.prankur.eCommerce.models.GrantAuthorityImpl;
+import com.prankur.eCommerce.models.Roles;
 import com.prankur.eCommerce.models.users.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,7 +26,7 @@ public class AppUser implements UserDetails
     private boolean isLocked;
     private Integer falseAttemptCount;
 
-    private List<GrantAuthorityImpl> grantAuthorities;
+    private List<Roles> roles;
 
     private Set<Address> addresses;
 
@@ -49,7 +49,7 @@ public class AppUser implements UserDetails
 
         // this.roles=rolesset;
 
-        this.grantAuthorities = user.getGrantAuthorities();
+        this.roles = user.getRoles();
 
         // this.addresses = new HashSet<Address>(user.getAddresses());
         this.falseAttemptCount=user.getFalseAttemptCount();
@@ -139,12 +139,12 @@ public class AppUser implements UserDetails
         this.falseAttemptCount = falseAttemptCount;
     }
 
-    public List<GrantAuthorityImpl> getGrantAuthorities() {
-        return grantAuthorities;
+    public List<Roles> getRoles() {
+        return roles;
     }
 
-    public void setGrantAuthorities(List<GrantAuthorityImpl> grantAuthorities) {
-        this.grantAuthorities = grantAuthorities;
+    public void setRoles(List<Roles> roles) {
+        this.roles = roles;
     }
 
     public Set<Address> getAddresses() {
@@ -157,7 +157,7 @@ public class AppUser implements UserDetails
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return grantAuthorities;
+        return roles;
     }
 
     @Override
