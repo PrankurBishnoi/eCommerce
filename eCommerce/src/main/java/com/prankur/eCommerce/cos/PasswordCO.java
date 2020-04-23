@@ -1,16 +1,16 @@
-package com.prankur.eCommerce.dtos;
+package com.prankur.eCommerce.cos;
 
 import com.prankur.eCommerce.validators.MatchingPassword;
 import com.prankur.eCommerce.validators.ValidPassword;
 
 @MatchingPassword
-public class PasswordDTO
+public class PasswordCO
 {
     @ValidPassword(message = "length 8-15,atleast 1 upper,1 lower, 1 digit, 1 special")
     private String password;
     private String confirmPassword;
 
-    public PasswordDTO(String password, String confirmPassword) {
+    public PasswordCO(String password, String confirmPassword) {
         this.password = password;
         this.confirmPassword = confirmPassword;
     }
@@ -31,6 +31,6 @@ public class PasswordDTO
         this.confirmPassword = confirmPassword;
     }
 
-    public PasswordDTO() {
+    public PasswordCO() {
     }
 }

@@ -1,13 +1,14 @@
-package com.prankur.eCommerce.services;
+package com.prankur.eCommerce.services.usersServices;
 
-import com.prankur.eCommerce.dtos.PasswordResetDto;
+import com.prankur.eCommerce.cos.PasswordResetCO;
 import com.prankur.eCommerce.events.ForgotPasswordCompleteEvent;
 import com.prankur.eCommerce.events.ResetPasswordEvent;
 import com.prankur.eCommerce.models.users.User;
 import com.prankur.eCommerce.models.VerificationToken;
 import com.prankur.eCommerce.repositories.TokenRepository;
-import com.prankur.eCommerce.repositories.UserRepos;
+import com.prankur.eCommerce.repositories.usersReposes.UserRepos;
 import com.prankur.eCommerce.security.AppUser;
+import com.prankur.eCommerce.services.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.context.SecurityContext;
@@ -48,10 +49,10 @@ public class UserService
         applicationEventPublisher.publishEvent(new ForgotPasswordCompleteEvent(user,token,locale));
     }
 
-    public String resetPassword(String token, PasswordResetDto passwordResetDto, String appurl, String localeale)
+    public String resetPassword(String token, PasswordResetCO passwordResetCO, String appurl, String localeale)
     {
         String response = null;
-        String password = passwordResetDto.getPassword();
+        String password = passwordResetCO.getPassword();
 
         Optional<VerificationToken> optional = tokenRepository.findByTokenAndIsdeleted(token,false);
         if (optional.isPresent())

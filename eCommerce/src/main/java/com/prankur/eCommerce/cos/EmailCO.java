@@ -1,13 +1,13 @@
-package com.prankur.eCommerce.dtos;
+package com.prankur.eCommerce.cos;
 
 import javax.validation.constraints.Email;
 
-public class EmailDTO
+public class EmailCO
 {
     @Email
     private String email;
 
-    public EmailDTO(@Email String email) {
+    public EmailCO(@Email String email) {
         this.email = email;
     }
 
@@ -19,6 +19,6 @@ public class EmailDTO
         this.email = email;
     }
 
-    public EmailDTO() {
+    public EmailCO() {
     }
 }

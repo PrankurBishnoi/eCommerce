@@ -1,15 +1,11 @@
-package com.prankur.eCommerce.controllers;
+package com.prankur.eCommerce.controllers.usersControllers;
 
-import com.prankur.eCommerce.services.AdminServices;
+import com.prankur.eCommerce.services.usersServices.AdminServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.Locale;
 
 @RestController
 @RequestMapping("admin")

@@ -1,9 +1,9 @@
-package com.prankur.eCommerce.controllers;
+package com.prankur.eCommerce.controllers.usersControllers;
 
-import com.prankur.eCommerce.dtos.PasswordResetDto;
+import com.prankur.eCommerce.cos.PasswordResetCO;
 import com.prankur.eCommerce.models.users.User;
-import com.prankur.eCommerce.repositories.UserRepos;
-import com.prankur.eCommerce.services.UserService;
+import com.prankur.eCommerce.repositories.usersReposes.UserRepos;
+import com.prankur.eCommerce.services.usersServices.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -41,10 +41,10 @@ public class UserController
     }
 
     @PostMapping("/resetPassword")
-    String resetPassword(@RequestParam("token")String token, @Valid @RequestBody PasswordResetDto passwordResetDto,HttpServletRequest httpServletRequest)
+    String resetPassword(@RequestParam("token")String token, @Valid @RequestBody PasswordResetCO passwordResetCO, HttpServletRequest httpServletRequest)
     {
 //        ResponseEntity<String> responseEntity = null;
-        String response = userService.resetPassword(token,passwordResetDto,httpServletRequest.getContextPath(),httpServletRequest.getLocale().toString());
+        String response = userService.resetPassword(token, passwordResetCO,httpServletRequest.getContextPath(),httpServletRequest.getLocale().toString());
 //        responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
         return  response;
     }

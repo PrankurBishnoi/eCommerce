@@ -1,4 +1,4 @@
-package com.prankur.eCommerce.repositories;
+package com.prankur.eCommerce.repositories.usersReposes;
 
 import com.prankur.eCommerce.models.users.Customer;
 import org.springframework.data.domain.Pageable;

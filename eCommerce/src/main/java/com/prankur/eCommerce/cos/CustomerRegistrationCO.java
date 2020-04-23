@@ -1,4 +1,4 @@
-package com.prankur.eCommerce.dtos;
+package com.prankur.eCommerce.cos;
 
 import com.prankur.eCommerce.models.Address;
 
@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
 
-public class CustomerRegistrationDTO extends PasswordDTO
+public class CustomerRegistrationCO extends PasswordCO
 {
     @NotBlank(message = "Email is Mandatory")
     @Email(message = "Not a Proper Email //nPlease check your Email")
@@ -75,7 +75,7 @@ public class CustomerRegistrationDTO extends PasswordDTO
         this.addresses = addresses;
     }
 
-    public CustomerRegistrationDTO()
+    public CustomerRegistrationCO()
     {}
 
 }

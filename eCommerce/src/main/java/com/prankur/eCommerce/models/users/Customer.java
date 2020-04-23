@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
 
+@DiscriminatorColumn()
 @Entity
 @JsonFilter("CustomerFilter")
 @PrimaryKeyJoinColumn(name = "id")
@@ -16,6 +17,7 @@ public class Customer extends User {
 
     private long contact;
 
+//
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<ProductReview> productReviews;
 
@@ -41,13 +43,13 @@ public class Customer extends User {
 //    }
 
 
-    public Set<ProductReview> getProductReviews() {
-        return productReviews;
-    }
-
-    public void setProductReviews(Set<ProductReview> productReviews) {
-        this.productReviews = productReviews;
-    }
+//    public Set<ProductReview> getProductReviews() {
+//        return productReviews;
+//    }
+//
+//    public void setProductReviews(Set<ProductReview> productReviews) {
+//        this.productReviews = productReviews;
+//    }
 
     @Override
     public String toString() {

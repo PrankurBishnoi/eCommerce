@@ -1,4 +1,4 @@
-package com.prankur.eCommerce.services;
+package com.prankur.eCommerce.services.usersServices;
 
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
@@ -6,8 +6,8 @@ import com.prankur.eCommerce.events.OnAccountActivationEvent;
 import com.prankur.eCommerce.exceptions.ResourceNotFoundException;
 import com.prankur.eCommerce.models.users.Customer;
 import com.prankur.eCommerce.models.users.Seller;
-import com.prankur.eCommerce.repositories.CustomerRepos;
-import com.prankur.eCommerce.repositories.SellerRepos;
+import com.prankur.eCommerce.repositories.usersReposes.CustomerRepos;
+import com.prankur.eCommerce.repositories.usersReposes.SellerRepos;
 import com.prankur.eCommerce.utils.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

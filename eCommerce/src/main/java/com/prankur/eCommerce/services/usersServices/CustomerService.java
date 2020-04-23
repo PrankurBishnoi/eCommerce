@@ -1,11 +1,11 @@
-package com.prankur.eCommerce.services;
+package com.prankur.eCommerce.services.usersServices;
 
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-import com.prankur.eCommerce.dtos.AddressDto;
-import com.prankur.eCommerce.dtos.CustomerRegistrationDTO;
-import com.prankur.eCommerce.dtos.EmailDTO;
-import com.prankur.eCommerce.dtos.PasswordResetDto;
+import com.prankur.eCommerce.cos.AddressCO;
+import com.prankur.eCommerce.cos.CustomerRegistrationCO;
+import com.prankur.eCommerce.cos.EmailCO;
+import com.prankur.eCommerce.cos.PasswordResetCO;
 import com.prankur.eCommerce.enums.Roles;
 import com.prankur.eCommerce.events.OnCustomerRegistrationEmailEvent;
 import com.prankur.eCommerce.exceptions.InvalidTokenException;
@@ -14,10 +14,11 @@ import com.prankur.eCommerce.models.*;
 import com.prankur.eCommerce.models.users.Customer;
 import com.prankur.eCommerce.models.users.User;
 import com.prankur.eCommerce.repositories.AddressRepos;
-import com.prankur.eCommerce.repositories.CustomerRepos;
+import com.prankur.eCommerce.repositories.usersReposes.CustomerRepos;
 import com.prankur.eCommerce.repositories.TokenRepository;
-import com.prankur.eCommerce.repositories.UserRepos;
+import com.prankur.eCommerce.repositories.usersReposes.UserRepos;
 import com.prankur.eCommerce.security.AppUser;
+import com.prankur.eCommerce.services.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -55,32 +56,32 @@ public class CustomerService
     @Autowired
     ApplicationEventPublisher applicationEventPublisher;
 
-    public Customer createCustomerAccount(CustomerRegistrationDTO customerRegistrationDTO)
+    public Customer createCustomerAccount(CustomerRegistrationCO customerRegistrationCO)
     {
         Customer response = null;
-        Boolean doesCustomerExist = userRepos.existsByEmail(customerRegistrationDTO.getEmail());
-//        System.out.println(customerRegistrationDTO.getAddresses());
+        Boolean doesCustomerExist = userRepos.existsByEmail(customerRegistrationCO.getEmail());
+//        System.out.println(customerRegistrationCO.getAddresses());
         if (doesCustomerExist)
             throw new ResourceAlreadyExistException("Email Already Exists");
-        Customer customer = new Customer(customerRegistrationDTO.getEmail(),
-                                            customerRegistrationDTO.getFirstName(),customerRegistrationDTO.getMiddleName(),customerRegistrationDTO.getLastName(),
-                                            passwordEncoder.encode(customerRegistrationDTO.getPassword()),
+        Customer customer = new Customer(customerRegistrationCO.getEmail(),
+                                            customerRegistrationCO.getFirstName(),customerRegistrationCO.getMiddleName(),customerRegistrationCO.getLastName(),
+                                            passwordEncoder.encode(customerRegistrationCO.getPassword()),
                                             true,false,
-                                            customerRegistrationDTO.getAddresses(),
+                                            customerRegistrationCO.getAddresses(),
                                             Arrays.asList(new GrantAuthorityImpl(Roles.CUSTOMER.getRoles())),
                                             false,false,false,false,0,
-                                            customerRegistrationDTO.getContact()
+                                            customerRegistrationCO.getContact()
                                         );
 
-        if (customerRegistrationDTO.getAddresses()!=null)
+        if (customerRegistrationCO.getAddresses()!=null)
         {
-//            for (Address address : customerRegistrationDTO.getAddresses())
+//            for (Address address : customerRegistrationCO.getAddresses())
 //            {
 //                customer.addAddress(address);
 //            }
 
-            Iterator<Address> i = customerRegistrationDTO.getAddresses().iterator();
-//            System.out.println(customerRegistrationDTO.getAddresses());
+            Iterator<Address> i = customerRegistrationCO.getAddresses().iterator();
+//            System.out.println(customerRegistrationCO.getAddresses());
             while (i.hasNext())
                 customer.addAddress(i.next());
         }
@@ -150,11 +151,11 @@ public class CustomerService
         return response;
     }
 
-    public String resendVerificationLink(EmailDTO emailDTO, Locale locale)
+    public String resendVerificationLink(EmailCO emailCO, Locale locale)
     {
         String response = null;
 
-        User user = userRepos.findByEmail(emailDTO.getEmail());
+        User user = userRepos.findByEmail(emailCO.getEmail());
         if (user.getIsActive()==true)
             response = "Account is Already Activated";
         else
@@ -206,38 +207,38 @@ public class CustomerService
 
     }
 
-    public String updateProfile(CustomerRegistrationDTO customerRegistrationDTO)
+    public String updateProfile(CustomerRegistrationCO customerRegistrationCO)
     {
         String response = null;
         Customer customer = giveCurrentLoggedInCustomer();
-        if (customerRegistrationDTO.getFirstName()!=null)
-            customer.setFirstName(customerRegistrationDTO.getFirstName());
+        if (customerRegistrationCO.getFirstName()!=null)
+            customer.setFirstName(customerRegistrationCO.getFirstName());
 
-        if (customerRegistrationDTO.getMiddleName()!=null)
-            customer.setMiddleName(customerRegistrationDTO.getMiddleName());
+        if (customerRegistrationCO.getMiddleName()!=null)
+            customer.setMiddleName(customerRegistrationCO.getMiddleName());
 
-        if (customerRegistrationDTO.getLastName()!=null)
-            customer.setLastName(customerRegistrationDTO.getLastName());
+        if (customerRegistrationCO.getLastName()!=null)
+            customer.setLastName(customerRegistrationCO.getLastName());
 
         customerRepos.save(customer);
         return response = "Profile Updated";
     }
 
-    public String updatePassword(PasswordResetDto passwordResetDto)
+    public String updatePassword(PasswordResetCO passwordResetCO)
     {
         String response = null;
         Customer customer = giveCurrentLoggedInCustomer();
-        String password = passwordResetDto.getPassword();
+        String password = passwordResetCO.getPassword();
         customer.setPassword(password);
         customerRepos.save(customer);
         response = "Password Updated";
         return response;
     }
 
-    public String addAddress(AddressDto addressDto)
+    public String addAddress(AddressCO addressCO)
     {
         Customer customer = giveCurrentLoggedInCustomer();
-        Address address = new Address(addressDto.getCity(),addressDto.getState(),addressDto.getCountry(),addressDto.getAddressLine(),addressDto.getZipCode(),addressDto.getLabel());
+        Address address = new Address(addressCO.getCity(), addressCO.getState(), addressCO.getCountry(), addressCO.getAddressLine(), addressCO.getZipCode(), addressCO.getLabel());
         customer.addAddress(address);
         customerRepos.save(customer);
         return "Address Saved";
@@ -267,36 +268,36 @@ public class CustomerService
         return response;
     }
 
-    public String updateAddress(AddressDto addressDto)
+    public String updateAddress(AddressCO addressCO)
     {
         String response = null;
         Customer customer = giveCurrentLoggedInCustomer();
         Address address = null;
         Set<Address> addresses = customer.getAddresses();
         for(Address a : addresses) {
-            if (a.getId() == addressDto.getId()) {
+            if (a.getId() == addressCO.getId()) {
                 address = a;
             }
         }
         System.out.println(address);
-        if (addressDto.getCity() != null) {
-            String city = addressDto.getCity();
+        if (addressCO.getCity() != null) {
+            String city = addressCO.getCity();
             address.setCity(city);
         }
-        if (addressDto.getCountry() != null) {
-            String country = addressDto.getCountry();
+        if (addressCO.getCountry() != null) {
+            String country = addressCO.getCountry();
             address.setCountry(country);
         }
-        if (addressDto.getLabel() != null) {
-            String houseNumber = addressDto.getLabel();
+        if (addressCO.getLabel() != null) {
+            String houseNumber = addressCO.getLabel();
             address.setCity(houseNumber);
         }
-        if (addressDto.getState() != null) {
-            String state = addressDto.getState();
+        if (addressCO.getState() != null) {
+            String state = addressCO.getState();
             address.setCity(state);
         }
-//        if (addressDto.getZipCode() != null) {
-//            String pinCode = addressDto.getZipCode();
+//        if (addressCO.getZipCode() != null) {
+//            String pinCode = addressCO.getZipCode();
 //            address.setCity(pinCode);
 //        }
 

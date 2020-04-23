@@ -10,6 +10,7 @@ public class OnAccountLLockedEvent extends ApplicationEvent
 
     public OnAccountLLockedEvent(Email email) {
         super(email);
+        this.email = email;
     }
 
     public Email getEmail() {

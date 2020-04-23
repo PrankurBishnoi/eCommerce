@@ -1,4 +1,4 @@
-package com.prankur.eCommerce.dtos;
+package com.prankur.eCommerce.cos;
 
 import com.prankur.eCommerce.models.Address;
 import com.prankur.eCommerce.validators.MatchingPassword;
@@ -8,7 +8,7 @@ import javax.validation.constraints.*;
 import java.util.Set;
 
 @MatchingPassword
-public class SellerRegistrationDTO  extends PasswordDTO
+public class SellerRegistrationCO extends PasswordCO
 {
     @NotBlank(message = "Email cannot be null")
     @Email(message = "Email constraint violation")

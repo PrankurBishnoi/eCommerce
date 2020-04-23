@@ -9,7 +9,7 @@ public class ResetPasswordEvent  extends ApplicationEvent
 
     public ResetPasswordEvent(User user) {
         super(user);
-//        this.user = user;
+        this.user = user;
     }
 
     public User getUser() {

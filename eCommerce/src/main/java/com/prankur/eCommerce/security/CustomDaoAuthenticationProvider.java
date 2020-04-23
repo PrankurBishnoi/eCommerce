@@ -2,8 +2,8 @@ package com.prankur.eCommerce.security;
 
 import com.prankur.eCommerce.events.OnAccountLLockedEvent;
 import com.prankur.eCommerce.models.users.User;
-import com.prankur.eCommerce.repositories.UserRepos;
-import com.prankur.eCommerce.services.UserService;
+import com.prankur.eCommerce.repositories.usersReposes.UserRepos;
+import com.prankur.eCommerce.services.usersServices.UserService;
 import com.prankur.eCommerce.utils.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

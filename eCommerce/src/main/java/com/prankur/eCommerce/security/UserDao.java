@@ -1,7 +1,7 @@
 package com.prankur.eCommerce.security;
 
 import com.prankur.eCommerce.models.users.User;
-import com.prankur.eCommerce.repositories.UserRepos;
+import com.prankur.eCommerce.repositories.usersReposes.UserRepos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;

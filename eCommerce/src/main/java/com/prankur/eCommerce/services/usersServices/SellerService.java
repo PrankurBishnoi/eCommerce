@@ -1,21 +1,23 @@
-package com.prankur.eCommerce.services;
+package com.prankur.eCommerce.services.usersServices;
 
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-import com.prankur.eCommerce.dtos.AddressDto;
-import com.prankur.eCommerce.dtos.PasswordResetDto;
-import com.prankur.eCommerce.dtos.SellerRegistrationDTO;
+import com.prankur.eCommerce.cos.AddressCO;
+import com.prankur.eCommerce.cos.PasswordResetCO;
+import com.prankur.eCommerce.cos.SellerRegistrationCO;
 import com.prankur.eCommerce.enums.Roles;
 import com.prankur.eCommerce.events.OnSellerRegistrationEmailEvent;
 import com.prankur.eCommerce.exceptions.ResourceAlreadyExistException;
 import com.prankur.eCommerce.models.*;
+import com.prankur.eCommerce.models.users.Customer;
 import com.prankur.eCommerce.models.users.Seller;
 import com.prankur.eCommerce.models.users.User;
 import com.prankur.eCommerce.repositories.AddressRepos;
-import com.prankur.eCommerce.repositories.SellerRepos;
+import com.prankur.eCommerce.repositories.usersReposes.SellerRepos;
 import com.prankur.eCommerce.repositories.TokenRepository;
-import com.prankur.eCommerce.repositories.UserRepos;
+import com.prankur.eCommerce.repositories.usersReposes.UserRepos;
 import com.prankur.eCommerce.security.AppUser;
+import com.prankur.eCommerce.services.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -25,6 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
 
@@ -52,12 +55,12 @@ public class SellerService
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    public Seller createSellerAccount(SellerRegistrationDTO sellerRegistrationDTO)
+    public Seller createSellerAccount(SellerRegistrationCO sellerRegistrationCO)
     {
         Seller response = null;
-        Boolean doesEmailExist = userRepos.existsByEmail(sellerRegistrationDTO.getEmail());
-        Boolean doesGSTExist = sellerRepos.existsByGst(sellerRegistrationDTO.getGst());
-        Boolean doesCompanyNameExist = sellerRepos.existsByCompanyNameIgnoreCase(sellerRegistrationDTO.getCompanyName());
+        Boolean doesEmailExist = userRepos.existsByEmail(sellerRegistrationCO.getEmail());
+        Boolean doesGSTExist = sellerRepos.existsByGst(sellerRegistrationCO.getGst());
+        Boolean doesCompanyNameExist = sellerRepos.existsByCompanyNameIgnoreCase(sellerRegistrationCO.getCompanyName());
 
         int flag = 0;
         if (doesEmailExist)
@@ -81,21 +84,21 @@ public class SellerService
         else if(flag == 7)
             throw  new ResourceAlreadyExistException("Email , GST , CompanyName Already Exists");
 
-        Seller seller = new Seller(sellerRegistrationDTO.getEmail(),
-                                    sellerRegistrationDTO.getFirstName(),sellerRegistrationDTO.getMiddleName(),sellerRegistrationDTO.getLastName(),
-                                    passwordEncoder.encode(sellerRegistrationDTO.getPassword()),
+        Seller seller = new Seller(sellerRegistrationCO.getEmail(),
+                                    sellerRegistrationCO.getFirstName(),sellerRegistrationCO.getMiddleName(),sellerRegistrationCO.getLastName(),
+                                    passwordEncoder.encode(sellerRegistrationCO.getPassword()),
                                     false,false,
-                                    sellerRegistrationDTO.getAddress(),
+                                    sellerRegistrationCO.getAddress(),
                                     Arrays.asList(new GrantAuthorityImpl(Roles.SELLER.getRoles())),
                                     false,false,false,false,0,
-                                    sellerRegistrationDTO.getGst(),
-                                    sellerRegistrationDTO.getCompanyContact(),
-                                    sellerRegistrationDTO.getCompanyName()
+                                    sellerRegistrationCO.getGst(),
+                                    sellerRegistrationCO.getCompanyContact(),
+                                    sellerRegistrationCO.getCompanyName()
                                   );
 
-        if (sellerRegistrationDTO.getAddress()!=null)
+        if (sellerRegistrationCO.getAddress()!=null)
         {
-            for (Address address : sellerRegistrationDTO.getAddress()) {
+            for (Address address : sellerRegistrationCO.getAddress()) {
                 seller.addAddress(address);
             }
         }
@@ -124,76 +127,123 @@ public class SellerService
         mappingJacksonValue.setFilters(simpleFilterProvider);
         System.out.println("Seller Filter profile " + mappingJacksonValue.getValue());
         return mappingJacksonValue;
-
     }
 
-    public String updateProfile(SellerRegistrationDTO sellerRegistrationDTO)
+    public MappingJacksonValue returnAddress()
+    {
+        Seller seller = giveCurrentLoggedInSeller();
+        System.out.println("Customer in give address: "+seller);
+        Set<Address> addresses1 = seller.getAddresses();
+        SimpleBeanPropertyFilter simpleBeanPropertyFilter = SimpleBeanPropertyFilter.filterOutAllExcept("city","state","country","label","zipCode");
+        SimpleFilterProvider simpleFilterProvider = new SimpleFilterProvider();
+        simpleFilterProvider.addFilter("AddressFilter",simpleBeanPropertyFilter);
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(addresses1);
+        System.out.println(addresses1);
+        mappingJacksonValue.setFilters(simpleFilterProvider);
+        System.out.println("Seller Filter address " + mappingJacksonValue.getValue()+"   "+seller.getAddresses());
+        return mappingJacksonValue;
+    }
+
+    public String updateProfile(SellerRegistrationCO sellerRegistrationCO)
     {
         String response = null;
         Seller seller = giveCurrentLoggedInSeller();
-        if (sellerRegistrationDTO.getFirstName()!=null)
-            seller.setFirstName(sellerRegistrationDTO.getFirstName());
+        if (sellerRegistrationCO.getFirstName()!=null)
+            seller.setFirstName(sellerRegistrationCO.getFirstName());
 
-        if (sellerRegistrationDTO.getMiddleName()!=null)
-            seller.setMiddleName(sellerRegistrationDTO.getMiddleName());
+        if (sellerRegistrationCO.getMiddleName()!=null)
+            seller.setMiddleName(sellerRegistrationCO.getMiddleName());
 
-        if (sellerRegistrationDTO.getCompanyName()!=null)
-            seller.setCompanyName(sellerRegistrationDTO.getCompanyName());
+        if (sellerRegistrationCO.getCompanyName()!=null)
+            seller.setCompanyName(sellerRegistrationCO.getCompanyName());
 
-        if (sellerRegistrationDTO.getLastName()!=null)
-            seller.setLastName(sellerRegistrationDTO.getLastName());
+        if (sellerRegistrationCO.getLastName()!=null)
+            seller.setLastName(sellerRegistrationCO.getLastName());
 
-//        if (sellerRegistrationDTO.getCompanyContact()!=null)
-//            seller.setCompanyContact(sellerRegistrationDTO.getCompanyContact());
+//        if (sellerRegistrationCO.getCompanyContact()!=null)
+//            seller.setCompanyContact(sellerRegistrationCO.getCompanyContact());
 
-        if (sellerRegistrationDTO.getGst()!=null)
-            seller.setGst(sellerRegistrationDTO.getGst());
+        if (sellerRegistrationCO.getGst()!=null)
+            seller.setGst(sellerRegistrationCO.getGst());
 
         sellerRepos.save(seller);
         return response = "Profile Updated";
     }
 
-    public String updatePassword(PasswordResetDto passwordResetDto)
+    public String updatePassword(PasswordResetCO passwordResetCO)
     {
         String response = null;
         Seller seller = giveCurrentLoggedInSeller();
-        String password = passwordResetDto.getPassword();
+        String password = passwordResetCO.getPassword();
         seller.setPassword(password);
         sellerRepos.save(seller);
         response = "Password Updated";
         return response;
     }
 
-    public String updateAddress(AddressDto addressDto)
+    public String addAddress(AddressCO addressCO)
+    {
+        Seller seller = giveCurrentLoggedInSeller();
+        Address address = new Address(addressCO.getCity(), addressCO.getState(), addressCO.getCountry(), addressCO.getAddressLine(), addressCO.getZipCode(), addressCO.getLabel());
+        seller.addAddress(address);
+        sellerRepos.save(seller);
+        return "Address Saved";
+    }
+
+    public String deleteAddress(Long addressId)
+    {
+        String response = null;
+        Seller seller = giveCurrentLoggedInSeller();
+        Set<Address> addresses = seller.getAddresses();
+        Iterator iterator = addresses.iterator();
+        while(iterator.hasNext())
+        {
+            Address address = (Address) iterator.next();
+            if (address.getId()==addressId)
+            {
+                addresses.remove(address);
+                System.out.println(address);
+                seller.setAddresses(addresses);
+                sellerRepos.save(seller);
+                response = "Address Deleted";
+                break;
+            }
+        }
+        if (response ==null)
+            response  = "Address not found";
+        return response;
+    }
+
+    public String updateAddress(AddressCO addressCO)
     {
         String response = null;
         Seller seller = giveCurrentLoggedInSeller();
         Address address = null;
         Set<Address> addresses = seller.getAddresses();
         for(Address a : addresses) {
-            if (a.getId() == addressDto.getId()) {
+            if (a.getId() == addressCO.getId()) {
                 address = a;
             }
         }
         System.out.println(address);
-        if (addressDto.getCity() != null) {
-            String city = addressDto.getCity();
+        if (addressCO.getCity() != null) {
+            String city = addressCO.getCity();
             address.setCity(city);
         }
-        if (addressDto.getCountry() != null) {
-            String country = addressDto.getCountry();
+        if (addressCO.getCountry() != null) {
+            String country = addressCO.getCountry();
             address.setCountry(country);
         }
-        if (addressDto.getLabel() != null) {
-            String houseNumber = addressDto.getLabel();
+        if (addressCO.getLabel() != null) {
+            String houseNumber = addressCO.getLabel();
             address.setCity(houseNumber);
         }
-        if (addressDto.getState() != null) {
-            String state = addressDto.getState();
+        if (addressCO.getState() != null) {
+            String state = addressCO.getState();
             address.setCity(state);
         }
-//        if (addressDto.getZipCode() != null) {
-//            String pinCode = addressDto.getZipCode();
+//        if (addressCO.getZipCode() != null) {
+//            String pinCode = addressCO.getZipCode();
 //            address.setCity(pinCode);
 //        }
 

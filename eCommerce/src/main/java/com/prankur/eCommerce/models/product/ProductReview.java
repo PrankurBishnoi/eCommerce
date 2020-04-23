@@ -20,11 +20,11 @@ public class ProductReview
     private int rating;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-//    @MapsId("productId")
+    @MapsId("productId")
     private Product product;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-//    @MapsId("customerId")
+    @MapsId("customerId")
     private Customer customer;
 
     public ProductReview(String review, int rating) {
@@ -32,27 +32,27 @@ public class ProductReview
         this.rating = rating;
     }
 
-    public ProductReview(String review, int rating, Product product, Customer customer) {
-        this.review = review;
-        this.rating = rating;
-        this.product = product;
-        this.customer = customer;
-    }
-
-
-
-    //    public ProductReview(ProductReviewIdCompositKey id, String review, int rating) {
-//        this.id = id;
-//        this.review = review;
-//        this.rating = rating;
-//    }
-//
-//    public ProductReview(ProductReviewIdCompositKey id, String review, int rating, Product product, Customer customer) {
-//        this.id = id;
+//    public ProductReview(String review, int rating, Product product, Customer customer) {
 //        this.review = review;
 //        this.rating = rating;
 //        this.product = product;
 //        this.customer = customer;
+//    }
+
+
+
+//        public ProductReview(ProductReviewIdCompositKey id, String review, int rating) {
+//        this.id = id;
+//        this.review = review;
+//        this.rating = rating;
+//    }
+
+//    public ProductReview(ProductReviewIdCompositKey id, String review, int rating, Product product, Customer customer) {
+//        this.id = id;
+//        this.review = review;
+//        this.rating = rating;
+////        this.product = product;
+////        this.customer = customer;
 //    }
 
 //    public ProductReviewIdCompositKey getId() {
@@ -62,6 +62,15 @@ public class ProductReview
 //    public void setId(ProductReviewIdCompositKey id) {
 //        this.id = id;
 //    }
+
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getReview() {
         return review;

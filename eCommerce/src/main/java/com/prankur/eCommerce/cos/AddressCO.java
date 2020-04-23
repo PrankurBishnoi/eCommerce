@@ -1,6 +1,6 @@
-package com.prankur.eCommerce.dtos;
+package com.prankur.eCommerce.cos;
 
-public class AddressDto
+public class AddressCO
 {
     private Long id;
     private String city;
@@ -10,7 +10,7 @@ public class AddressDto
     private long zipCode;
     private String label;   //office,home,etc
 
-    public AddressDto(String city, String state, String country, String addressLine, long zipCode, String label) {
+    public AddressCO(String city, String state, String country, String addressLine, long zipCode, String label) {
         this.city = city;
         this.state = state;
         this.country = country;
@@ -77,7 +77,7 @@ public class AddressDto
 
     @Override
     public String toString() {
-        return "AddressDto{" +
+        return "AddressCO{" +
                 "city='" + city + '\'' +
                 ", state='" + state + '\'' +
                 ", country='" + country + '\'' +
@@ -87,6 +87,6 @@ public class AddressDto
                 '}';
     }
 
-    public AddressDto() {
+    public AddressCO() {
     }
 }
