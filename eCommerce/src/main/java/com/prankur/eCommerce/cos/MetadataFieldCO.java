@@ -10,18 +10,18 @@ public class MetadataFieldCO
     @NotEmpty
     @Column(unique = true)
     private String name;
-    @NotNull
-    @NotEmpty
-    private Long parentCategoryId;
+//    @NotNull
+//    @NotEmpty
+//    private Long parentCategoryId;
 
     public MetadataFieldCO(@NotNull @NotEmpty String name) {
         this.name = name;
     }
 
-    public MetadataFieldCO(@NotNull @NotEmpty String name, @NotNull @NotEmpty Long parentCategoryId) {
-        this.name = name;
-        this.parentCategoryId = parentCategoryId;
-    }
+//    public MetadataFieldCO(@NotNull @NotEmpty String name, @NotNull @NotEmpty Long parentCategoryId) {
+//        this.name = name;
+//        this.parentCategoryId = parentCategoryId;
+//    }
 
     public String getName() {
         return name;
@@ -31,19 +31,19 @@ public class MetadataFieldCO
         this.name = name;
     }
 
-    public Long getParentCategoryId() {
-        return parentCategoryId;
-    }
-
-    public void setParentCategoryId(Long parentCategoryId) {
-        this.parentCategoryId = parentCategoryId;
-    }
+//    public Long getParentCategoryId() {
+//        return parentCategoryId;
+//    }
+//
+//    public void setParentCategoryId(Long parentCategoryId) {
+//        this.parentCategoryId = parentCategoryId;
+//    }
 
     @Override
     public String toString() {
         return "MetadataFieldCO{" +
                 "name='" + name + '\'' +
-                ", parentCategoryId=" + parentCategoryId +
+//                ", parentCategoryId=" + parentCategoryId +
                 '}';
     }
 

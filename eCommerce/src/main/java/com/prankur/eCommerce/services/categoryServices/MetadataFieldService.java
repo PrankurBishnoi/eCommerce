@@ -16,13 +16,12 @@ public class MetadataFieldService
     {
         CategoryMetadataField categoryMetadataField = new CategoryMetadataField(metadataFieldCO.getName());
         metadataFieldRepository.save(categoryMetadataField);
-        CategoryMetadataField checkMetaField = null;
+        CategoryMetadataField checkMetaField ;
         checkMetaField = metadataFieldRepository.findByName(metadataFieldCO.getName());
         if(checkMetaField == null)
             return "Couldn't save to database";
         else
             return "Metadata Field addedd to the database";
-
     }
 
 

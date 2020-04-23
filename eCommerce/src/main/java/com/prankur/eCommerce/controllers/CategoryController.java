@@ -8,11 +8,16 @@ import com.prankur.eCommerce.repositories.categoryRepositories.MetadataFieldValu
 import com.prankur.eCommerce.services.categoryServices.CategoryService;
 import com.prankur.eCommerce.services.categoryServices.MetadataFieldService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Controller
+@RequestMapping("category")
 public class CategoryController
 {
     @Autowired
@@ -32,17 +37,21 @@ public class CategoryController
 
 
     @PostMapping("/addMetadataField")
-    String addMetadataField(@RequestBody MetadataFieldCO metadataFieldCO)
+    public ResponseEntity<String> addMetadataField(@RequestBody MetadataFieldCO metadataFieldCO)
     {
+        String response ;
         CategoryMetadataField categoryMetadataFieldUnique = metadataFieldRepository.findByName(metadataFieldCO.getName());
+//        System.out.println(4 + categoryMetadataFieldUnique.getName());
         if (categoryMetadataFieldUnique == null)
         {
-            String response = metadataFieldService.addMetadataField(metadataFieldCO);
-            return response;
-
+            response = metadataFieldService.addMetadataField(metadataFieldCO);
         }
         else
-            return "Metadata Field already exists in Database";
+        {
+            response = "Metadata Field already exists in Database";
+        }
+        ResponseEntity entity = ResponseEntity.status(HttpStatus.OK).body(response);
+        return entity;
     }
 
 
