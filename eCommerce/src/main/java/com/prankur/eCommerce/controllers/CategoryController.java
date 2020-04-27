@@ -96,13 +96,23 @@ public class CategoryController
     }
 
     @GetMapping("/admin/viewAllCategories")
-    List<ViewCategoryDTO> viewAllCategories(@RequestParam(defaultValue = "10") String page, @RequestParam(defaultValue = "0") String pageoff, @RequestParam(defaultValue = "id") String sortby, @RequestParam(defaultValue = "ASC") String order, @RequestParam(defaultValue = "*") String query)
+    List<ViewCategoryDTO> viewAllCategoriesAdmin(@RequestParam(defaultValue = "10") String page, @RequestParam(defaultValue = "0") String pageoff, @RequestParam(defaultValue = "id") String sortby, @RequestParam(defaultValue = "ASC") String order, @RequestParam(defaultValue = "*") String query)
     {
         List<ViewCategoryDTO> viewCategoryDTOS;
         Integer pagesize = Integer.parseInt(page);
         Integer pageOffSet = Integer.parseInt(pageoff);
         viewCategoryDTOS = categoryService.viewAllCategoriesForAdmin(pageOffSet,pagesize,sortby,order,query);
         return viewCategoryDTOS;
+    }
+
+    @PutMapping("/admin/updateCategory")
+    String updateCategory(@RequestParam(defaultValue = "0") String id, @RequestParam String newName)
+    {
+        String response = null;
+        Long iid = Long.parseLong(id);
+        logger.info("id = "+id);
+        response = categoryService.updateCategory(iid,newName);
+        return response;
     }
 
 

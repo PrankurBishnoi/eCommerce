@@ -15,7 +15,7 @@ public interface CategoryRepository extends CrudRepository<Category,Long>
     Category findByName(String name);
 //    Category findById(Long parentId);
 
-    @Query(value = "select * from category where parent_id = :id",nativeQuery = true)
+    @Query(value = "from Category where parent_id = :id")
     Category findByParentId(Long id);
 
     @Query(value = "from Category")

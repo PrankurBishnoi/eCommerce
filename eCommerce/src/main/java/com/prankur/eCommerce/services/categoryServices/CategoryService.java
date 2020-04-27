@@ -1,6 +1,7 @@
 package com.prankur.eCommerce.services.categoryServices;
 
 import com.prankur.eCommerce.dtos.ViewCategoryDTO;
+import com.prankur.eCommerce.exceptions.customExceptions.ResourceAlreadyExistException;
 import com.prankur.eCommerce.exceptions.customExceptions.ResourceNotFoundException;
 import com.prankur.eCommerce.models.category.Category;
 import com.prankur.eCommerce.models.category.CategoryMetadataField;
@@ -127,6 +128,29 @@ public class CategoryService
             viewCategoryDTOList.add(temp);
         }
         return viewCategoryDTOList;
+    }
+
+    public String updateCategory(Long id, String newName)
+    {
+        String response = null;
+        if(!categoryRepository.findById(id).isPresent())
+        {
+            throw new ResourceNotFoundException("Invalid id, Category with id: " + id + " not found");
+        }
+        Category category = categoryRepository.findById(id).get();
+        Category temp = null;
+        temp = categoryRepository.findByName(newName);
+        if (temp != null)
+        {
+            throw new ResourceAlreadyExistException("Category name already exists");
+        }
+        else
+        {
+            category.setName(newName);
+            categoryRepository.save(category);
+            response = "Category Successfully updated";
+        }
+        return response;
     }
 
 }
