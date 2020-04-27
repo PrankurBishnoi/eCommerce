@@ -7,7 +7,7 @@ import com.prankur.eCommerce.cos.PasswordResetCO;
 import com.prankur.eCommerce.cos.SellerRegistrationCO;
 import com.prankur.eCommerce.enums.Role;
 import com.prankur.eCommerce.events.OnSellerRegistrationEmailEvent;
-import com.prankur.eCommerce.exceptions.ResourceAlreadyExistException;
+import com.prankur.eCommerce.exceptions.customExceptions.ResourceAlreadyExistException;
 import com.prankur.eCommerce.models.*;
 import com.prankur.eCommerce.models.users.Seller;
 import com.prankur.eCommerce.models.users.User;

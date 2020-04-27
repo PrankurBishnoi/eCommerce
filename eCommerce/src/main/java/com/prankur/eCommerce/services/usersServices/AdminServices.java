@@ -3,7 +3,7 @@ package com.prankur.eCommerce.services.usersServices;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.prankur.eCommerce.events.OnAccountActivationEvent;
-import com.prankur.eCommerce.exceptions.ResourceNotFoundException;
+import com.prankur.eCommerce.exceptions.customExceptions.ResourceNotFoundException;
 import com.prankur.eCommerce.models.users.Customer;
 import com.prankur.eCommerce.models.users.Seller;
 import com.prankur.eCommerce.repositories.usersRepositories.CustomerRepository;

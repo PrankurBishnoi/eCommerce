@@ -91,19 +91,6 @@ public class CategoryController
         logger.info("id: "+id);
         ViewCategoryDTO viewCategoryDTO ;
         viewCategoryDTO = categoryService.getOneCategory(id);
-
-
-//        Category category = null;
-//        ResponseEntity<Category> responseEntity = null;
-//        Optional<Category> categories = categoryRepository.findById(id);
-//        if (categories.isPresent())
-//        {
-//            category = categories.get();
-//            responseEntity = ResponseEntity.status(HttpStatus.OK).body(category);
-//        }
-//        else
-//            responseEntity = ResponseEntity.status(HttpStatus.OK).body("Not Found");
-
         logger.info("3: " + viewCategoryDTO.getCategory().getName());
         return viewCategoryDTO;
     }

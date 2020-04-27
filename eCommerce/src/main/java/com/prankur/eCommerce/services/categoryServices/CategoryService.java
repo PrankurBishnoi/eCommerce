@@ -1,7 +1,7 @@
 package com.prankur.eCommerce.services.categoryServices;
 
 import com.prankur.eCommerce.dtos.ViewCategoryDTO;
-import com.prankur.eCommerce.exceptions.ResourceNotFoundException;
+import com.prankur.eCommerce.exceptions.customExceptions.ResourceNotFoundException;
 import com.prankur.eCommerce.models.category.Category;
 import com.prankur.eCommerce.models.category.CategoryMetadataField;
 import com.prankur.eCommerce.repositories.categoryRepositories.CategoryRepository;
@@ -12,13 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class CategoryService
@@ -88,11 +86,8 @@ public class CategoryService
                 Optional<Category> parentCategory1 = categoryRepository.findById(parentCategory.getParentCategory().getId());
                 if (parentCategory1.isPresent())
                 {
-                    System.out.println(parentCategory1.get());
                     parentCategory = parentCategory1.get();
-                    System.out.println(parentCategory);
                     parentCategories.add(parentCategory);
-                    System.out.println(1);
                 }
                 else
                 {
@@ -105,7 +100,6 @@ public class CategoryService
             viewCategoryDTO.setCategory(category);
             viewCategoryDTO.setChildCategory(childCategory);
             viewCategoryDTO.setParentCategory(parentCategories);
-            System.out.println(2);
             return viewCategoryDTO;
         }
         else
