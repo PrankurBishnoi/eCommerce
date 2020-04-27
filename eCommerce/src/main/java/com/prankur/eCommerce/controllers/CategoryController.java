@@ -43,7 +43,7 @@ public class CategoryController
     Logger logger = LoggerFactory.getLogger(CategoryController.class);
 
 
-    @PostMapping("/addMetadataField")
+    @PostMapping("/admin/addMetadataField")
     public ResponseEntity<String> addMetadataField(@RequestBody MetadataFieldCO metadataFieldCO)
     {
         String response ;
@@ -61,16 +61,16 @@ public class CategoryController
         return entity;
     }
 
-    @GetMapping("/metadataFields")
-    List<CategoryMetadataField> getMetadataFields(@RequestParam(defaultValue = "10") String page, @RequestParam(defaultValue = "0") String pageoff, @RequestParam(defaultValue = "id") String sortby, @RequestParam(defaultValue = "ASC") String order/*, @RequestParam(defaultValue = "*") String query*/)
+    @GetMapping("/admin/metadataFields")
+    List<CategoryMetadataField> getMetadataFields(@RequestParam(defaultValue = "10") String page, @RequestParam(defaultValue = "0") String pageoff, @RequestParam(defaultValue = "id") String sortby, @RequestParam(defaultValue = "ASC") String order, @RequestParam(defaultValue = "*") String query)
     {
         Integer pagesize = Integer.parseInt(page);
         Integer pageoffset = Integer.parseInt(pageoff);
-        List<CategoryMetadataField> categoryMetadataFields = categoryService.returnMetadataFields(pageoffset,pagesize,sortby,order/*,query*/);
+        List<CategoryMetadataField> categoryMetadataFields = categoryService.returnMetadataFields(pageoffset,pagesize,sortby,order,query);
         return categoryMetadataFields;
     }
 
-    @PostMapping("/addCategory")
+    @PostMapping("/admin/addCategory")
     ResponseEntity<String> addCategory(@RequestParam String name, @RequestParam(defaultValue = "0") String parentsId)
     {
         String response = null;
@@ -83,7 +83,7 @@ public class CategoryController
         return responseEntity;
     }
 
-    @PostMapping("/viewCategory/{id}")
+    @GetMapping("/admin/viewOneCategory/{id}")
     ViewCategoryDTO viewCategory(@PathVariable Long id)
     {
         //        ResponseEntity<Category> responseEntity = null;
@@ -93,6 +93,16 @@ public class CategoryController
         viewCategoryDTO = categoryService.getOneCategory(id);
         logger.info("3: " + viewCategoryDTO.getCategory().getName());
         return viewCategoryDTO;
+    }
+
+    @GetMapping("/admin/viewAllCategories")
+    List<ViewCategoryDTO> viewAllCategories(@RequestParam(defaultValue = "10") String page, @RequestParam(defaultValue = "0") String pageoff, @RequestParam(defaultValue = "id") String sortby, @RequestParam(defaultValue = "ASC") String order, @RequestParam(defaultValue = "*") String query)
+    {
+        List<ViewCategoryDTO> viewCategoryDTOS;
+        Integer pagesize = Integer.parseInt(page);
+        Integer pageOffSet = Integer.parseInt(pageoff);
+        viewCategoryDTOS = categoryService.viewAllCategoriesForAdmin(pageOffSet,pagesize,sortby,order,query);
+        return viewCategoryDTOS;
     }
 
 

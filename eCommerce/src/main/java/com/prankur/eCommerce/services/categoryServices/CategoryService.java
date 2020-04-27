@@ -30,7 +30,7 @@ public class CategoryService
     Logger logger = LoggerFactory.getLogger(CategoryService.class);
 
 
-    public List<CategoryMetadataField> returnMetadataFields(Integer pageOffset, Integer pageSize, String sortBy, String order/*, String query*/)
+    public List<CategoryMetadataField> returnMetadataFields(Integer pageOffset, Integer pageSize, String sortBy, String order, String query)
     {
 //        Iterable<CategoryMetadataField> categoryMetadataFields = metadataFieldRepository.findAll();
 //        List<CategoryMetadataField> categoryMetadataFields1 = new ArrayList<>();
@@ -42,10 +42,10 @@ public class CategoryService
             pageable = PageRequest.of(pageOffset, pageSize, Sort.by(new Sort.Order(Sort.Direction.DESC, sortBy)));
         else
             pageable = PageRequest.of(pageOffset, pageSize, Sort.by(new Sort.Order(Sort.Direction.ASC, sortBy)));
-//        if (query.equals("*"))
-            categoryMetadataFields = metadataFieldRepository.findAll(pageable);
-//        else
-//            categoryMetadataFields = metadataFieldRepository.findWithQuery(pageable,query);
+        if (query.equals("*"))
+            categoryMetadataFields = metadataFieldRepository.findAllMetadatas(pageable);
+        else
+            categoryMetadataFields = metadataFieldRepository.findAllMetadatas(pageable,query);
         return categoryMetadataFields;
     }
 
@@ -106,6 +106,27 @@ public class CategoryService
         {
             throw new ResourceNotFoundException("Category not found");
         }
+    }
+
+    public List<ViewCategoryDTO> viewAllCategoriesForAdmin(Integer pageOffset, Integer pageSize, String sortBy, String order, String query)
+    {
+        List<ViewCategoryDTO>viewCategoryDTOList = new ArrayList<>();
+        List<Category> categories;
+        Pageable pageable;
+        if (order.equals("DESC"))
+            pageable = PageRequest.of(pageOffset,pageSize,Sort.by(new Sort.Order(Sort.Direction.DESC,sortBy)));
+        else
+            pageable = PageRequest.of(pageOffset,pageSize,Sort.by(new Sort.Order(Sort.Direction.ASC,sortBy)));
+        if (query.equals("*"))
+            categories = categoryRepository.findAllCategories(pageable);
+        else
+            categories = categoryRepository.findAllCategories(pageable,query);
+        for (Category c: categories)
+        {
+            ViewCategoryDTO temp = getOneCategory(c.getId());
+            viewCategoryDTOList.add(temp);
+        }
+        return viewCategoryDTOList;
     }
 
 }

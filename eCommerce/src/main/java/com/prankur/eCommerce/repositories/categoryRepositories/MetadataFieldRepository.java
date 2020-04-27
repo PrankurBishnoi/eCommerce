@@ -16,8 +16,11 @@ public interface MetadataFieldRepository extends CrudRepository<CategoryMetadata
 //    @Query("select * from CategoryMetadataField where name like %:query%")
 //    List<CategoryMetadataField> findWithQuery(Pageable pageable, String query);
 
-//    @Query("select * from CategoryMetadataField")
-    List<CategoryMetadataField> findAll(Pageable pageable);
+    @Query(value = "from CategoryMetadataField")
+    List<CategoryMetadataField> findAllMetadatas(Pageable pageable);
+
+    @Query(value = "from CategoryMetadataField where name Like %:query%")
+    List<CategoryMetadataField> findAllMetadatas(Pageable pageable,String query);
 
 
 
