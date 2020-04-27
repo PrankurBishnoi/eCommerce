@@ -33,20 +33,18 @@ public class CustomResponseExceptionHandler extends ResponseEntityExceptionHandl
             HttpStatus status,
             WebRequest request)
     {
-        List<String> descriptions = new ArrayList<>();
-        descriptions.add(ex.getMessage());
-        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(new Date(), HttpStatus.BAD_REQUEST,descriptions);
-//        apiErrorResponse.setMessage("Validation Error");
-        return super.handleMethodArgumentNotValid(ex, headers, status, request);
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(new Date(), HttpStatus.BAD_REQUEST,ex.getMessage());
+        apiErrorResponse.setDescriptions("Validation Error");
+        apiErrorResponse.addValidationErrors(ex.getBindingResult().getFieldErrors());
+        apiErrorResponse.addValidationError(ex.getBindingResult().getGlobalErrors());
+        return new ResponseEntity<Object>(apiErrorResponse,apiErrorResponse.getStatus());
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     protected ResponseEntity<Object> handleBadCredentialsException
             (BadCredentialsException exception, WebRequest request)
     {
-        List<String> descriptions = new ArrayList<>();
-        descriptions.add(exception.getMessage());
-        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(new Date(),HttpStatus.BAD_REQUEST,descriptions);
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(new Date(),HttpStatus.BAD_REQUEST,exception.getMessage());
         return new ResponseEntity<Object>(apiErrorResponse,apiErrorResponse.getStatus());
     }
 
@@ -54,9 +52,7 @@ public class CustomResponseExceptionHandler extends ResponseEntityExceptionHandl
     protected ResponseEntity<Object> handleResourceAlreadyExistsException
             (ResourceAlreadyExistException exception, WebRequest request)
     {
-        List<String> descriptions = new ArrayList<>();
-        descriptions.add(exception.getMessage());
-        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(new Date(),HttpStatus.CONFLICT,descriptions);
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(new Date(),HttpStatus.CONFLICT,exception.getMessage());
         return new ResponseEntity<Object>(apiErrorResponse,apiErrorResponse.getStatus());
     }
 
@@ -66,7 +62,7 @@ public class CustomResponseExceptionHandler extends ResponseEntityExceptionHandl
     {
         List<String> descriptions = new ArrayList<>();
         descriptions.add(exception.getMessage());
-        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(new Date(),HttpStatus.BAD_REQUEST,descriptions);
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(new Date(),HttpStatus.BAD_REQUEST,exception.getMessage());
         return new ResponseEntity<Object>(apiErrorResponse,apiErrorResponse.getStatus());
     }
 
@@ -74,9 +70,7 @@ public class CustomResponseExceptionHandler extends ResponseEntityExceptionHandl
     protected ResponseEntity<Object> handleResourceNotFoundException
             (ResourceNotFoundException exception, WebRequest request)
     {
-        List<String> descriptions = new ArrayList<>();
-        descriptions.add(exception.getMessage());
-        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(new Date(),HttpStatus.NOT_FOUND,descriptions);
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(new Date(),HttpStatus.NOT_FOUND,exception.getMessage());
         return new ResponseEntity<Object>(apiErrorResponse,apiErrorResponse.getStatus());
     }
 
@@ -87,9 +81,7 @@ public class CustomResponseExceptionHandler extends ResponseEntityExceptionHandl
         String error =
                 ex.getName() + " should be of type " + ex.getRequiredType().getName();
 
-        List<String> descriptions = new ArrayList<>();
-        descriptions.add(error);
-        ApiErrorResponse apiError = new ApiErrorResponse(new Date(), HttpStatus.BAD_REQUEST, descriptions);
+        ApiErrorResponse apiError = new ApiErrorResponse(new Date(), HttpStatus.BAD_REQUEST, ex.getMessage());
         return new ResponseEntity<Object>(
                 apiError, apiError.getStatus());
     }
@@ -97,10 +89,8 @@ public class CustomResponseExceptionHandler extends ResponseEntityExceptionHandl
     @ExceptionHandler(MailException.class)
     public ResponseEntity<Object> handleMailSendFailure(Exception ex, WebRequest request) {
 
-        List<String> descriptions = new ArrayList<>();
-        descriptions.add("Mail Send Failure.. \n try to activate account by using resend mail option..");
         ApiErrorResponse apiError = new ApiErrorResponse(
-                HttpStatus.BAD_GATEWAY, descriptions);
+                HttpStatus.BAD_GATEWAY, "Mail Send Failure.. \n try to activate account by using resend mail option..");
         return new ResponseEntity<Object>(
                 apiError, apiError.getStatus());
     }
