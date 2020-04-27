@@ -5,6 +5,9 @@ import com.prankur.eCommerce.models.category.CategoryMetadataField;
 import com.prankur.eCommerce.repositories.categoryRepositories.CategoryRepository;
 import com.prankur.eCommerce.repositories.categoryRepositories.MetadataFieldRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +25,23 @@ public class CategoryService
     CategoryRepository categoryRepository;
 
 
-    public List<CategoryMetadataField> returnMetadataFields()
+    public List<CategoryMetadataField> returnMetadataFields(Integer pageOffset, Integer pageSize, String sortBy, String order/*, String query*/)
     {
-        Iterable<CategoryMetadataField> categoryMetadataFields = metadataFieldRepository.findAll();
-        List<CategoryMetadataField> categoryMetadataFields1 = new ArrayList<>();
-        categoryMetadataFields.forEach(categoryMetadataFields1::add);
-        return categoryMetadataFields1;
+//        Iterable<CategoryMetadataField> categoryMetadataFields = metadataFieldRepository.findAll();
+//        List<CategoryMetadataField> categoryMetadataFields1 = new ArrayList<>();
+//        categoryMetadataFields.forEach(categoryMetadataFields1::add);
+//        return categoryMetadataFields1;
+        List<CategoryMetadataField> categoryMetadataFields = null;
+        Pageable pageable;
+        if (order.equals("DESC"))
+            pageable = PageRequest.of(pageOffset, pageSize, Sort.by(new Sort.Order(Sort.Direction.DESC, sortBy)));
+        else
+            pageable = PageRequest.of(pageOffset, pageSize, Sort.by(new Sort.Order(Sort.Direction.ASC, sortBy)));
+//        if (query.equals("*"))
+            categoryMetadataFields = metadataFieldRepository.findAll(pageable);
+//        else
+//            categoryMetadataFields = metadataFieldRepository.findWithQuery(pageable,query);
+        return categoryMetadataFields;
     }
 
     public String addCategory(String name, Long parentId)

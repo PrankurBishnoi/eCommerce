@@ -57,14 +57,16 @@ public class CategoryController
     }
 
     @GetMapping("/metadataFields")
-    List<CategoryMetadataField> getMetadataFields()
+    List<CategoryMetadataField> getMetadataFields(@RequestParam(defaultValue = "10") String page, @RequestParam(defaultValue = "0") String pageoff, @RequestParam(defaultValue = "id") String sortby, @RequestParam(defaultValue = "ASC") String order/*, @RequestParam(defaultValue = "*") String query*/)
     {
-        List<CategoryMetadataField> categoryMetadataFields = categoryService.returnMetadataFields();
+        Integer pagesize = Integer.parseInt(page);
+        Integer pageoffset = Integer.parseInt(pageoff);
+        List<CategoryMetadataField> categoryMetadataFields = categoryService.returnMetadataFields(pageoffset,pagesize,sortby,order/*,query*/);
         return categoryMetadataFields;
     }
 
     @PostMapping("/addCategory")
-    ResponseEntity<String> addCategory(@RequestParam String name, @RequestParam(defaultValue = "0") String parentsId)
+        ResponseEntity<String> addCategory(@RequestParam String name, @RequestParam(defaultValue = "0") String parentsId)
     {
         String response = null;
         System.out.println("name " + name);
