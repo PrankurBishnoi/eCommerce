@@ -1,6 +1,7 @@
 package com.prankur.eCommerce.controllers;
 
 import com.prankur.eCommerce.cos.MetadataFieldCO;
+import com.prankur.eCommerce.dtos.ViewCategoryDTO;
 import com.prankur.eCommerce.models.category.Category;
 import com.prankur.eCommerce.models.category.CategoryMetadataField;
 import com.prankur.eCommerce.repositories.categoryRepositories.MetadataFieldRepository;
@@ -8,6 +9,8 @@ import com.prankur.eCommerce.repositories.categoryRepositories.CategoryRepositor
 import com.prankur.eCommerce.repositories.categoryRepositories.MetadataFieldValuesRepository;
 import com.prankur.eCommerce.services.categoryServices.CategoryService;
 import com.prankur.eCommerce.services.categoryServices.MetadataFieldService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
+@RestController
 //@RequestMapping("category")
 public class CategoryController
 {
@@ -36,6 +39,8 @@ public class CategoryController
 
     @Autowired
     CategoryService categoryService;
+
+    Logger logger = LoggerFactory.getLogger(CategoryController.class);
 
 
     @PostMapping("/addMetadataField")
@@ -66,16 +71,41 @@ public class CategoryController
     }
 
     @PostMapping("/addCategory")
-        ResponseEntity<String> addCategory(@RequestParam String name, @RequestParam(defaultValue = "0") String parentsId)
+    ResponseEntity<String> addCategory(@RequestParam String name, @RequestParam(defaultValue = "0") String parentsId)
     {
         String response = null;
-        System.out.println("name " + name);
+//        System.out.println("name " + name);
         Long parentId = Long.parseLong(parentsId);
-        System.out.println("id " + parentId);
+//        System.out.println("id " + parentId);
         ResponseEntity<String> responseEntity = null;
         response = categoryService.addCategory(name, parentId);
         responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
         return responseEntity;
+    }
+
+    @PostMapping("/viewCategory/{id}")
+    ViewCategoryDTO viewCategory(@PathVariable Long id)
+    {
+        //        ResponseEntity<Category> responseEntity = null;
+//        System.out.println("id" + id);
+        logger.info("id: "+id);
+        ViewCategoryDTO viewCategoryDTO ;
+        viewCategoryDTO = categoryService.getOneCategory(id);
+
+
+//        Category category = null;
+//        ResponseEntity<Category> responseEntity = null;
+//        Optional<Category> categories = categoryRepository.findById(id);
+//        if (categories.isPresent())
+//        {
+//            category = categories.get();
+//            responseEntity = ResponseEntity.status(HttpStatus.OK).body(category);
+//        }
+//        else
+//            responseEntity = ResponseEntity.status(HttpStatus.OK).body("Not Found");
+
+        logger.info("3: " + viewCategoryDTO.getCategory().getName());
+        return viewCategoryDTO;
     }
 
 

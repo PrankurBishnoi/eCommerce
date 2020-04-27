@@ -1,9 +1,13 @@
 package com.prankur.eCommerce.services.categoryServices;
 
+import com.prankur.eCommerce.dtos.ViewCategoryDTO;
+import com.prankur.eCommerce.exceptions.ResourceNotFoundException;
 import com.prankur.eCommerce.models.category.Category;
 import com.prankur.eCommerce.models.category.CategoryMetadataField;
 import com.prankur.eCommerce.repositories.categoryRepositories.CategoryRepository;
 import com.prankur.eCommerce.repositories.categoryRepositories.MetadataFieldRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CategoryService
@@ -23,6 +28,8 @@ public class CategoryService
 
     @Autowired
     CategoryRepository categoryRepository;
+
+    Logger logger = LoggerFactory.getLogger(CategoryService.class);
 
 
     public List<CategoryMetadataField> returnMetadataFields(Integer pageOffset, Integer pageSize, String sortBy, String order/*, String query*/)
@@ -65,6 +72,45 @@ public class CategoryService
             Category category1 = new Category(name,categories.get());
             categoryRepository.save(category1);
             return  "Category added to database";
+        }
+    }
+
+    public ViewCategoryDTO getOneCategory(Long id)
+    {
+        Optional<Category> optionalCategory = categoryRepository.findById(id);
+        List<Category> parentCategories = new ArrayList<>();
+        if (optionalCategory.isPresent())
+        {
+            Category category = optionalCategory.get();
+            Category parentCategory = category;
+            while(parentCategory.getParentCategory()!=null)
+            {
+                Optional<Category> parentCategory1 = categoryRepository.findById(parentCategory.getParentCategory().getId());
+                if (parentCategory1.isPresent())
+                {
+                    System.out.println(parentCategory1.get());
+                    parentCategory = parentCategory1.get();
+                    System.out.println(parentCategory);
+                    parentCategories.add(parentCategory);
+                    System.out.println(1);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            Category childCategory = null;
+            childCategory = categoryRepository.findByParentId(category.getId());
+            ViewCategoryDTO viewCategoryDTO = new ViewCategoryDTO();
+            viewCategoryDTO.setCategory(category);
+            viewCategoryDTO.setChildCategory(childCategory);
+            viewCategoryDTO.setParentCategory(parentCategories);
+            System.out.println(2);
+            return viewCategoryDTO;
+        }
+        else
+        {
+            throw new ResourceNotFoundException("Category not found");
         }
     }
 

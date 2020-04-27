@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@JsonFilter(value = "CategoryFilter")
+//@JsonFilter(value = "CategoryFilter")
 public class Category
 {
     @Id
