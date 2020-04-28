@@ -1,6 +1,7 @@
 package com.prankur.eCommerce.controllers;
 
 import com.prankur.eCommerce.cos.MetadataFieldCO;
+import com.prankur.eCommerce.cos.MetadataToCategoryCO;
 import com.prankur.eCommerce.dtos.ViewCategoryDTO;
 import com.prankur.eCommerce.models.category.Category;
 import com.prankur.eCommerce.models.category.CategoryMetadataField;
@@ -18,6 +19,8 @@ import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -115,7 +118,15 @@ public class CategoryController
         return response;
     }
 
-
+    @PostMapping("/admin/addMetaValueToCategory")
+    String addMetaValueToCategory(@RequestBody MetadataToCategoryCO metadataToCategoryCO)
+    {
+        HashMap<String, HashSet<String>> hashMap = metadataToCategoryCO.getFieldValues();
+        logger.trace(metadataToCategoryCO.toString());
+        String response = null;
+        response = categoryService.addMetaValueToCategory(metadataToCategoryCO);
+        return response;
+    }
 
 
 }
