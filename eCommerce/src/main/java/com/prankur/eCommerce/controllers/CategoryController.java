@@ -2,6 +2,7 @@ package com.prankur.eCommerce.controllers;
 
 import com.prankur.eCommerce.cos.MetadataFieldCO;
 import com.prankur.eCommerce.cos.MetadataToCategoryCO;
+import com.prankur.eCommerce.cos.ViewCategoriesSellerCO;
 import com.prankur.eCommerce.dtos.Response;
 import com.prankur.eCommerce.dtos.ViewCategoryDTO;
 import com.prankur.eCommerce.models.category.CategoryMetadataField;
@@ -129,7 +130,12 @@ public class CategoryController
         return response;
     }
 
-    
+    @GetMapping("/seller/viewLeafCategories")
+    List<ViewCategoriesSellerCO> viewLeafCategories()
+    {
+        List<ViewCategoriesSellerCO> viewCategoriesSellerCOS = categoryService.viewLeafCategories();
+        return viewCategoriesSellerCOS;
+    }
 
 
 }

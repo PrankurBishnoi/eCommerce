@@ -1,5 +1,7 @@
 package com.prankur.eCommerce.models.category;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -11,6 +13,7 @@ public class CategoryMetadataField
     private long id;
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "categoryMetadataField",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<MetadataFieldValues> metadataFieldValues;
 

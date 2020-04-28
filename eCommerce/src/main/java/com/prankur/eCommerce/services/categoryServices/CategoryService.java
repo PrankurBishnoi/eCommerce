@@ -1,6 +1,7 @@
 package com.prankur.eCommerce.services.categoryServices;
 
 import com.prankur.eCommerce.cos.MetadataToCategoryCO;
+import com.prankur.eCommerce.cos.ViewCategoriesSellerCO;
 import com.prankur.eCommerce.dtos.Response;
 import com.prankur.eCommerce.dtos.ViewCategoryDTO;
 import com.prankur.eCommerce.exceptions.customExceptions.ResourceAlreadyExistException;
@@ -225,7 +226,26 @@ public class CategoryService
         return response;
     }
 
+    public List<ViewCategoriesSellerCO> viewLeafCategories()
+    {
+        List<ViewCategoriesSellerCO> viewCategoriesSellerCOS = new ArrayList<>();
+        List<Category> leafCategories = categoryRepository.findLeafCategories();
 
+        for (Category c : leafCategories)
+        {
+            ViewCategoriesSellerCO temp = mapper(c);
+            viewCategoriesSellerCOS.add(temp);
+        }
+        return viewCategoriesSellerCOS;
+
+    }
+
+    public ViewCategoriesSellerCO mapper(Category category)
+    {
+        if (category == null)
+            return null;
+        return new ViewCategoriesSellerCO(category.getId(),category.getName(),category.getMetadataFieldValues(),mapper(category.getParentCategory()));
+    }
 
 
 

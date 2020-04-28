@@ -7,12 +7,13 @@ import javax.persistence.*;
 @Entity
 public class MetadataFieldValues
 {
-
+    @JsonIgnore
     @EmbeddedId
     private MetadataFieldValuesIdCompositeKey id;
 
     private String value;
 
+//    @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @MapsId("metadataFieldId")
     private CategoryMetadataField categoryMetadataField;

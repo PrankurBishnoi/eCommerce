@@ -1,5 +1,6 @@
 package com.prankur.eCommerce.repositories.categoryRepositories;
 
+import com.prankur.eCommerce.dtos.ViewCategoryDTO;
 import com.prankur.eCommerce.models.category.Category;
 import com.prankur.eCommerce.models.users.Customer;
 import org.springframework.data.domain.Pageable;
@@ -23,5 +24,9 @@ public interface CategoryRepository extends CrudRepository<Category,Long>
 
     @Query(value = "from Category where name Like %:query%")
     List<Category> findAllCategories(Pageable pageable, String query);
+
+//    @Query(value = "select * from category c where c.id =: categoryId and c.id NOT IN (select d.parent_id from category d where d.parent_id is not null", nativeQuery = true)
+    @Query(value = "select * from category c where c.id NOT IN (select d.parent_id from category d where d.parent_id is not null)", nativeQuery = true)
+    List<Category> findLeafCategories();
 
 }

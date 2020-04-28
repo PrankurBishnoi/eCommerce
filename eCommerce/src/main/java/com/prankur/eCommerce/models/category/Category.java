@@ -79,6 +79,14 @@ public class Category
         this.products = products;
     }
 
+    public Set<MetadataFieldValues> getMetadataFieldValues() {
+        return metadataFieldValues;
+    }
+
+    public void setMetadataFieldValues(Set<MetadataFieldValues> metadataFieldValues) {
+        this.metadataFieldValues = metadataFieldValues;
+    }
+
     @Override
     public String toString() {
         return "Category{" +
