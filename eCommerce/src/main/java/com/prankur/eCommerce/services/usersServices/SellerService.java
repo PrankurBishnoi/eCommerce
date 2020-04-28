@@ -36,25 +36,18 @@ public class SellerService
 {
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     SellerRepository sellerRepository;
-
     @Autowired
     AddressRepository addressRepository;
-
     @Autowired
     TokenRepository tokenRepository;
-
     @Autowired
     RolesRepository rolesRepository;
-
     @Autowired
     TokenService tokenService;
-
     @Autowired
     ApplicationEventPublisher applicationEventPublisher;
-
     @Autowired
     PasswordEncoder passwordEncoder;
 

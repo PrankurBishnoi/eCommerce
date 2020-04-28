@@ -2,8 +2,8 @@ package com.prankur.eCommerce.controllers;
 
 import com.prankur.eCommerce.cos.MetadataFieldCO;
 import com.prankur.eCommerce.cos.MetadataToCategoryCO;
+import com.prankur.eCommerce.dtos.Response;
 import com.prankur.eCommerce.dtos.ViewCategoryDTO;
-import com.prankur.eCommerce.models.category.Category;
 import com.prankur.eCommerce.models.category.CategoryMetadataField;
 import com.prankur.eCommerce.repositories.categoryRepositories.MetadataFieldRepository;
 import com.prankur.eCommerce.repositories.categoryRepositories.CategoryRepository;
@@ -15,14 +15,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJacksonValue;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 //@RequestMapping("category")
@@ -30,16 +27,12 @@ public class CategoryController
 {
     @Autowired
     CategoryRepository categoryRepository;
-
     @Autowired
     MetadataFieldRepository metadataFieldRepository;
-
     @Autowired
     MetadataFieldValuesRepository metadataFieldValuesRepository;
-
     @Autowired
     MetadataFieldService metadataFieldService;
-
     @Autowired
     CategoryService categoryService;
 
@@ -47,9 +40,9 @@ public class CategoryController
 
 
     @PostMapping("/admin/addMetadataField")
-    public ResponseEntity<String> addMetadataField(@RequestBody MetadataFieldCO metadataFieldCO)
+    public ResponseEntity<Response> addMetadataField(@RequestBody MetadataFieldCO metadataFieldCO)
     {
-        String response ;
+        Response response = new Response();
         CategoryMetadataField categoryMetadataFieldUnique = metadataFieldRepository.findByName(metadataFieldCO.getName());
 //        System.out.println(4 + categoryMetadataFieldUnique.getName());
         if (categoryMetadataFieldUnique == null)
@@ -58,7 +51,7 @@ public class CategoryController
         }
         else
         {
-            response = "Metadata Field already exists in Database";
+            response.setResponseMessage("Metadata Field already exists in Database");
         }
         ResponseEntity entity = ResponseEntity.status(HttpStatus.OK).body(response);
         return entity;
@@ -74,14 +67,14 @@ public class CategoryController
     }
 
     @PostMapping("/admin/addCategory")
-    ResponseEntity<String> addCategory(@RequestParam String name, @RequestParam(defaultValue = "0") String parentsId)
+    ResponseEntity<Response> addCategory(@RequestParam String name, @RequestParam(defaultValue = "0") String parentsId)
     {
-        String response = null;
+        Response response = new Response();
 //        System.out.println("name " + name);
         Long parentId = Long.parseLong(parentsId);
 //        System.out.println("id " + parentId);
-        ResponseEntity<String> responseEntity = null;
-        response = categoryService.addCategory(name, parentId);
+        ResponseEntity<Response> responseEntity = null;
+        response.setResponseMessage(categoryService.addCategory(name, parentId));
         responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
         return responseEntity;
     }
@@ -109,24 +102,34 @@ public class CategoryController
     }
 
     @PutMapping("/admin/updateCategory")
-    String updateCategory(@RequestParam(defaultValue = "0") String id, @RequestParam String newName)
+    Response updateCategory(@RequestParam(defaultValue = "0") String id, @RequestParam String newName)
     {
-        String response = null;
+        Response response = new Response();
         Long iid = Long.parseLong(id);
         logger.info("id = "+id);
-        response = categoryService.updateCategory(iid,newName);
+        response.setResponseMessage(categoryService.updateCategory(iid,newName));
         return response;
     }
 
     @PostMapping("/admin/addMetaValueToCategory")
-    String addMetaValueToCategory(@RequestBody MetadataToCategoryCO metadataToCategoryCO)
+    Response addMetaValueToCategory(@RequestBody MetadataToCategoryCO metadataToCategoryCO)
     {
         HashMap<String, HashSet<String>> hashMap = metadataToCategoryCO.getFieldValues();
         logger.trace(metadataToCategoryCO.toString());
-        String response = null;
-        response = categoryService.addMetaValueToCategory(metadataToCategoryCO);
+        Response response = new Response();
+        response.setResponseMessage(categoryService.addMetaValueToCategory(metadataToCategoryCO));
         return response;
     }
+
+    @PutMapping("/admin/updateMetadataField")
+    Response updateMetadataField(@RequestBody MetadataToCategoryCO metadataToCategoryCO)
+    {
+        Response response = new Response();
+        response.setResponseMessage(categoryService.updateMetadataFieldValues(metadataToCategoryCO));
+        return response;
+    }
+
+    
 
 
 }

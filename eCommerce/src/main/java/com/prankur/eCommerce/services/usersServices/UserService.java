@@ -25,19 +25,14 @@ public class UserService
 {
     @Autowired
     JdbcTokenStore jdbcTokenStore;
-
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     TokenService tokenService;
-
     @Autowired
     TokenRepository tokenRepository;
-
     @Autowired
     PasswordEncoder passwordEncoder;
-
     @Autowired
     ApplicationEventPublisher applicationEventPublisher;
 

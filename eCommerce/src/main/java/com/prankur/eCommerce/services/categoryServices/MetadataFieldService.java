@@ -1,6 +1,7 @@
 package com.prankur.eCommerce.services.categoryServices;
 
 import com.prankur.eCommerce.cos.MetadataFieldCO;
+import com.prankur.eCommerce.dtos.Response;
 import com.prankur.eCommerce.models.category.CategoryMetadataField;
 import com.prankur.eCommerce.repositories.categoryRepositories.MetadataFieldRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +13,18 @@ public class MetadataFieldService
     @Autowired
     MetadataFieldRepository metadataFieldRepository;
 
-    public String addMetadataField(MetadataFieldCO metadataFieldCO)
+    public Response addMetadataField(MetadataFieldCO metadataFieldCO)
     {
+        Response response = new Response();
         CategoryMetadataField categoryMetadataField = new CategoryMetadataField(metadataFieldCO.getName());
         metadataFieldRepository.save(categoryMetadataField);
         CategoryMetadataField checkMetaField ;
         checkMetaField = metadataFieldRepository.findByName(metadataFieldCO.getName());
         if(checkMetaField == null)
-            return "Couldn't save to database";
+            response.setResponseMessage("Couldn't save to database");
         else
-            return "Metadata Field addedd to the database";
+            response.setResponseMessage("Metadata Field addedd to the database");
+        return response;
     }
 
 

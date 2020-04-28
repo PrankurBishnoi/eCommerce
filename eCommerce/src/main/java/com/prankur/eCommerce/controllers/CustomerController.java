@@ -4,6 +4,7 @@ import com.prankur.eCommerce.cos.AddressCO;
 import com.prankur.eCommerce.cos.CustomerRegistrationCO;
 import com.prankur.eCommerce.cos.EmailCO;
 import com.prankur.eCommerce.cos.PasswordResetCO;
+import com.prankur.eCommerce.dtos.Response;
 import com.prankur.eCommerce.models.users.Customer;
 import com.prankur.eCommerce.services.usersServices.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,15 +32,17 @@ public class CustomerController
     }
 
     @PostMapping("/register")
-    ResponseEntity<String> register(@Valid @RequestBody CustomerRegistrationCO customerRegistrationCO, HttpServletRequest httpServletRequest)
+    ResponseEntity<Response> register(@Valid @RequestBody CustomerRegistrationCO customerRegistrationCO, HttpServletRequest httpServletRequest)
     {
         Locale locale = httpServletRequest.getLocale();
-        ResponseEntity<String> responseEntity = null;
+        ResponseEntity<Response> responseEntity = null;
+        Response response = new Response();
         System.out.println(customerRegistrationCO);
         Customer customer = customerService.createCustomerAccount(customerRegistrationCO);
         String appUrl = httpServletRequest.getContextPath();
         customerService.triggerCustomerRegistrationConfirmationEmail(appUrl,customer,locale);
-        responseEntity = ResponseEntity.status(HttpStatus.CREATED).body("Registration for Customer Successful,    " + customerService.getVerificationLink(customer));
+        response.setResponseMessage("Registration for Customer Successful,    " + customerService.getVerificationLink(customer));
+        responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);
         System.out.println(customer);
         System.out.println("Customer Registered");
 
@@ -47,22 +50,24 @@ public class CustomerController
     }
 
     @GetMapping("/registrationConfirmation")
-    ResponseEntity<String> activateCustomer(@RequestParam("token") String token, WebRequest request)
+    ResponseEntity<Response> activateCustomer(@RequestParam("token") String token, WebRequest request)
     {
-        ResponseEntity<String> responseEntity = null;
+        ResponseEntity<Response> responseEntity = null;
         System.out.printf("20");
         System.out.println(token);
-        String response = customerService.registrationConfirmation(token,request.getContextPath(),request.getLocale());
+        Response response = new Response();
+        response.setResponseMessage(customerService.registrationConfirmation(token,request.getContextPath(),request.getLocale()));
         responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
         return responseEntity;
     }
 
     @PostMapping("/resendVerificationLink")
-    public ResponseEntity<String> resendVerificationCode(@Valid @RequestBody EmailCO emailCO, HttpServletRequest httpServletRequest)
+    public ResponseEntity<Response> resendVerificationCode(@Valid @RequestBody EmailCO emailCO, HttpServletRequest httpServletRequest)
     {
-        ResponseEntity<String> responseEntity = null;
+        ResponseEntity<Response> responseEntity = null;
         Locale locale = httpServletRequest.getLocale();
-        String response = customerService.resendVerificationLink(emailCO,locale);
+        Response response = new Response();
+        response.setResponseMessage(customerService.resendVerificationLink(emailCO,locale));
         responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
         return responseEntity;
     }
@@ -82,42 +87,42 @@ public class CustomerController
     }
 
     @PostMapping("/profileUpdate")
-    public String updateProfile(@RequestBody CustomerRegistrationCO customerRegistrationCO)
+    public Response updateProfile(@RequestBody CustomerRegistrationCO customerRegistrationCO)
     {
-        String response =null;
-        response= customerService.updateProfile(customerRegistrationCO);
+        Response response =new Response();
+        response.setResponseMessage(customerService.updateProfile(customerRegistrationCO));
         return response;
     }
 
     @PostMapping("/passwordUpdate")
-    public String updatePassword(@Valid @RequestBody PasswordResetCO passwordResetCO)
+    public Response updatePassword(@Valid @RequestBody PasswordResetCO passwordResetCO)
     {
-        String response =null;
-        response= customerService.updatePassword(passwordResetCO);
+        Response response =new Response();
+        response.setResponseMessage(customerService.updatePassword(passwordResetCO));
         return response;
     }
 
     @PostMapping("/addAddress")
-    public String addAddress(@RequestBody AddressCO addressCO)
+    public Response addAddress(@RequestBody AddressCO addressCO)
     {
-        String response =null;
-        response= customerService.addAddress(addressCO);
+        Response response =new Response();
+        response.setResponseMessage(customerService.addAddress(addressCO));
         return response;
     }
 
     @PostMapping("/deleteAddress/{id}")
-    public String deleteAddress(@PathVariable Long addressId)
+    public Response deleteAddress(@PathVariable Long addressId)
     {
-        String response =null;
-        response= customerService.deleteAddress(addressId);
+        Response response =new Response();
+        response.setResponseMessage(customerService.deleteAddress(addressId));
         return response;
     }
 
     @PostMapping("/updateAddress")
-    public String updateAddress(@RequestBody AddressCO addressCO)
+    public Response updateAddress(@RequestBody AddressCO addressCO)
     {
-        String response =null;
-        response= customerService.updateAddress(addressCO);
+        Response response =new Response();
+        response.setResponseMessage(customerService.updateAddress(addressCO));
         return response;
     }
 

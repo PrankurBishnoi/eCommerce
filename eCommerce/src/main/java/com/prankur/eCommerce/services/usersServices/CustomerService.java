@@ -6,6 +6,7 @@ import com.prankur.eCommerce.cos.AddressCO;
 import com.prankur.eCommerce.cos.CustomerRegistrationCO;
 import com.prankur.eCommerce.cos.EmailCO;
 import com.prankur.eCommerce.cos.PasswordResetCO;
+import com.prankur.eCommerce.dtos.Response;
 import com.prankur.eCommerce.enums.Role;
 import com.prankur.eCommerce.events.OnCustomerRegistrationEmailEvent;
 import com.prankur.eCommerce.exceptions.customExceptions.InvalidTokenException;
@@ -35,28 +36,20 @@ public class CustomerService
 {
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     AddressRepository addressRepository;
-
     @Autowired
     UserService userService;
-
     @Autowired
     CustomerRepository customerRepository;
-
     @Autowired
     PasswordEncoder passwordEncoder;
-
     @Autowired
     TokenService tokenService;
-
     @Autowired
     TokenRepository tokenRepository;
-
     @Autowired
     RolesRepository rolesRepository;
-
     @Autowired
     ApplicationEventPublisher applicationEventPublisher;
 
@@ -268,7 +261,7 @@ public class CustomerService
             }
         }
         if (response ==null)
-            response  = "Address not found";
+            response = "Address not found";
         return response;
     }
 
@@ -306,8 +299,8 @@ public class CustomerService
 //        }
 
         addressRepository.save(address);
-        return "ADDRESS UPDATED";
-
+        response = "ADDRESS UPDATED";
+        return response;
     }
 
 

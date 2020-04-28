@@ -1,5 +1,6 @@
 package com.prankur.eCommerce.controllers;
 
+import com.prankur.eCommerce.dtos.Response;
 import com.prankur.eCommerce.services.usersServices.AdminServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,38 +36,38 @@ public class AdminController
     }
 
     @PostMapping("/activateCustomer/{id}")
-    ResponseEntity<String> activateCustomer(@PathVariable Long id)
+    ResponseEntity<Response> activateCustomer(@PathVariable Long id)
     {
-        String response = null;
-        response = adminServices.activateCustomer(id);
-        ResponseEntity<String> responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
+        Response response = new Response();
+        response.setResponseMessage(adminServices.activateCustomer(id));
+        ResponseEntity<Response> responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
         return responseEntity;
     }
 
     @PostMapping("/activateSeller/{id}")
-    ResponseEntity<String> activateSeller(@PathVariable Long id)
+    ResponseEntity<Response> activateSeller(@PathVariable Long id)
     {
-        String response = null;
-        response = adminServices.activateSeller(id);
-        ResponseEntity<String> responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
+        Response response = new Response();
+        response.setResponseMessage(adminServices.activateSeller(id));
+        ResponseEntity<Response> responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
         return responseEntity;
     }
 
     @PostMapping("/deactivateCustomer/{id}")
-    ResponseEntity<String> deActivateCustomer(@PathVariable Long id)
+    ResponseEntity<Response> deActivateCustomer(@PathVariable Long id)
     {
-        String response = null;
-        response = adminServices.deActivateCustomer(id);
-        ResponseEntity<String> responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
+        Response response = new Response();
+        response.setResponseMessage(adminServices.deActivateCustomer(id));
+        ResponseEntity<Response> responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
         return responseEntity;
     }
 
     @PostMapping("/deactivateSeller/{id}")
-    ResponseEntity<String> deActivateSeller(@PathVariable Long id)
+    ResponseEntity<Response> deActivateSeller(@PathVariable Long id)
     {
-        String response = null;
-        response = adminServices.deActivateSeller(id);
-        ResponseEntity<String> responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
+        Response response = new Response();
+        response.setResponseMessage(adminServices.deActivateSeller(id));
+        ResponseEntity<Response> responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
         return responseEntity;
     }
 

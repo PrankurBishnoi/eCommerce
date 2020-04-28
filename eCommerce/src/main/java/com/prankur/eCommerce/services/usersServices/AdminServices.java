@@ -2,6 +2,7 @@ package com.prankur.eCommerce.services.usersServices;
 
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.prankur.eCommerce.dtos.Response;
 import com.prankur.eCommerce.events.OnAccountActivationEvent;
 import com.prankur.eCommerce.exceptions.customExceptions.ResourceNotFoundException;
 import com.prankur.eCommerce.models.users.Customer;
@@ -27,13 +28,10 @@ public class AdminServices
 {
     @Autowired
     CustomerRepository customerRepository;
-
     @Autowired
     SellerRepository sellerRepository;
-
     @Value("${spring.mail.from.email}")
     private String from;
-
     @Autowired
     ApplicationEventPublisher applicationEventPublisher;
 
@@ -74,7 +72,7 @@ public class AdminServices
             Customer customer = customers.get();
             if (customer.getIsActive()==true)
             {
-                response ="User Account is Already Activated.";
+                response = "User Account is Already Activated.";
             }
             else
             {
@@ -103,7 +101,7 @@ public class AdminServices
             Seller seller = sellers.get();
             if (seller.getIsActive()==true)
             {
-                response ="User Account is Already Activated.";
+                response = "User Account is Already Activated.";
             }
             else
             {
@@ -132,7 +130,7 @@ public class AdminServices
             Customer customer = customers.get();
             if (customer.getIsActive()==false)
             {
-                response ="User Account is not Active.";
+                response = "User Account is not Active.";
             }
             else
             {
@@ -161,7 +159,7 @@ public class AdminServices
             Seller seller = sellers.get();
             if (seller.getIsActive()==false)
             {
-                response ="User Account is not Active.";
+                response = "User Account is not Active.";
             }
             else
             {

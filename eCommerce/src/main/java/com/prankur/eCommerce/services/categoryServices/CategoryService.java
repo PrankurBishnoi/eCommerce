@@ -1,6 +1,7 @@
 package com.prankur.eCommerce.services.categoryServices;
 
 import com.prankur.eCommerce.cos.MetadataToCategoryCO;
+import com.prankur.eCommerce.dtos.Response;
 import com.prankur.eCommerce.dtos.ViewCategoryDTO;
 import com.prankur.eCommerce.exceptions.customExceptions.ResourceAlreadyExistException;
 import com.prankur.eCommerce.exceptions.customExceptions.ResourceNotFoundException;
@@ -26,10 +27,8 @@ public class CategoryService
 {
     @Autowired
     MetadataFieldRepository metadataFieldRepository;
-
     @Autowired
     CategoryRepository categoryRepository;
-
     @Autowired
     MetadataFieldValuesRepository metadataFieldValuesRepository;
 
@@ -57,26 +56,28 @@ public class CategoryService
 
     public String addCategory(String name, Long parentId)
     {
+        String response = null;
         Category category = null;
         category = categoryRepository.findByName(name);
         if (category != null)
         {
             System.out.println(category);
-            return  "Category already Exists";
+            response = "Category already Exists";
         }
         else if (parentId == 0)
         {
             Category category1 = new Category(name);
             categoryRepository.save(category1);
-            return  "Category added to database";
+            response = "Category added to database";
         }
         else
         {
             Optional<Category> categories = categoryRepository.findById(parentId);
             Category category1 = new Category(name,categories.get());
             categoryRepository.save(category1);
-            return  "Category added to database";
+            response = "Category added to database";
         }
+        return  response;
     }
 
     public ViewCategoryDTO getOneCategory(Long id)
@@ -158,7 +159,6 @@ public class CategoryService
         return response;
     }
 
-
     public String addMetaValueToCategory(MetadataToCategoryCO metadataToCategoryCO)
     {
         String response = null;
@@ -175,7 +175,7 @@ public class CategoryService
 
         fields.forEach(fieldId -> {
             if (fieldValues.get(fieldId).isEmpty())
-                throw new ResourceNotFoundException("None of the Field have any value");
+                throw new ResourceNotFoundException("Field: ' "+ metadataFieldRepository.findById(Long.parseLong(fieldId)).get().getId() + ": " + metadataFieldRepository.findById(Long.parseLong(fieldId)).get().getName() + " ' have any value");
         });
 
         for (String fieldIds : fields) {
@@ -195,4 +195,38 @@ public class CategoryService
         response = "Fields and their values added Successfully";
         return response;
     }
+
+    public String updateMetadataFieldValues(MetadataToCategoryCO metadataToCategoryCO)
+    {
+        String response = null;
+        Long categoryId = Long.parseLong(metadataToCategoryCO.getCategoryId());
+        Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
+        if (!categoryOptional.isPresent())
+            throw new ResourceNotFoundException("Category with id: " + categoryId + "doesn't exists");
+        HashMap<String, HashSet<String>> fieldValues = metadataToCategoryCO.getFieldValues();
+        for (Map.Entry<String,HashSet<String>> entry : fieldValues.entrySet())
+        {
+            Long metadataFieldId = Long.parseLong(entry.getKey());
+            Optional<MetadataFieldValues> optional = metadataFieldValuesRepository.findByCategoryAndMetadataField(categoryId,metadataFieldId);
+            if (!optional.isPresent())
+                throw new ResourceNotFoundException("Either some field is invalid or not associated with given category");
+
+            MetadataFieldValues metadataFieldValues = optional.get();
+            String values = metadataFieldValues.getValue();
+            HashSet<String> hashSet = new HashSet<>(Arrays.asList(values.split(",")));
+            HashSet<String> metaDataFieldValueSet = entry.getValue();
+            hashSet.addAll(metaDataFieldValueSet);
+            String newValues = String.join(",",hashSet);
+            metadataFieldValues.setValue(newValues);
+            metadataFieldValuesRepository.save(metadataFieldValues);
+            logger.info("Metadata Field Values Updated Successfully");
+        }
+        response = "Metadata Field values updated successfully for the given Category";
+        return response;
+    }
+
+
+
+
+
 }

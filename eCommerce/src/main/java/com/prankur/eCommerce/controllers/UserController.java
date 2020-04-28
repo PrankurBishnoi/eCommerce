@@ -1,10 +1,12 @@
 package com.prankur.eCommerce.controllers;
 
 import com.prankur.eCommerce.cos.PasswordResetCO;
+import com.prankur.eCommerce.dtos.Response;
 import com.prankur.eCommerce.models.users.User;
 import com.prankur.eCommerce.repositories.usersRepositories.UserRepository;
 import com.prankur.eCommerce.services.usersServices.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.web.bind.annotation.*;
@@ -18,33 +20,34 @@ public class UserController
 {
     @Autowired
     TokenStore tokenStore;
-
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     UserService userService;
 
     @PostMapping("/forgotPassword/{email}")
-    public String forgotPassword(@PathVariable String email, HttpServletRequest httpServletRequest)
+    public Response forgotPassword(@PathVariable String email, HttpServletRequest httpServletRequest)
     {
         String locale = httpServletRequest.getLocale().toString();
+        Response response = new Response();
         User user = userRepository.findByEmail(email);
         if(user!=null)
         {
             System.out.println(user);
             userService.triggerForgotPassword(user,locale);
-            return "Email to reset password has been sent";
+            response.setResponseMessage("Email to reset password has been sent");
         }
         else
-            return "Email Not Found";
+            response.setResponseMessage("Email Not Found");
+        return response;
     }
 
     @PostMapping("/resetPassword")
-    String resetPassword(@RequestParam("token")String token, @Valid @RequestBody PasswordResetCO passwordResetCO, HttpServletRequest httpServletRequest)
+    Response resetPassword(@RequestParam("token")String token, @Valid @RequestBody PasswordResetCO passwordResetCO, HttpServletRequest httpServletRequest)
     {
 //        ResponseEntity<String> responseEntity = null;
-        String response = userService.resetPassword(token, passwordResetCO,httpServletRequest.getContextPath(),httpServletRequest.getLocale().toString());
+        Response response = new Response();
+        response.setResponseMessage(userService.resetPassword(token, passwordResetCO,httpServletRequest.getContextPath(),httpServletRequest.getLocale().toString()));
 //        responseEntity = ResponseEntity.status(HttpStatus.OK).body(response);
         return  response;
     }
@@ -52,10 +55,10 @@ public class UserController
 
 
 
-                                          @GetMapping("/logout")
-    public String logout(HttpServletRequest httpServletRequest)
+    @GetMapping("/logout")
+    public Response logout(HttpServletRequest httpServletRequest)
     {
-        String response = null;
+        Response response = new Response();
         String authHeader = httpServletRequest.getHeader("Authorization");
         if(authHeader != null)
         {
@@ -63,10 +66,10 @@ public class UserController
             System.out.println(tokenValue);
             OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenValue);
             tokenStore.removeAccessToken(accessToken);
-            response = "LoggedOut Successfully";
+            response.setResponseMessage("LoggedOut Successfully");
         }
         else
-            response = "Give Token by Authorization";
+            response.setResponseMessage("Give Token by Authorization");
         return response;
     }
 

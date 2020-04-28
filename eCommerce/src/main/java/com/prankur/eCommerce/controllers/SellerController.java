@@ -3,6 +3,7 @@ package com.prankur.eCommerce.controllers;
 import com.prankur.eCommerce.cos.AddressCO;
 import com.prankur.eCommerce.cos.PasswordResetCO;
 import com.prankur.eCommerce.cos.SellerRegistrationCO;
+import com.prankur.eCommerce.dtos.Response;
 import com.prankur.eCommerce.models.users.Seller;
 import com.prankur.eCommerce.services.usersServices.SellerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +30,15 @@ public class SellerController
     }
 
     @PostMapping("/register")
-    ResponseEntity<String> register(@Valid @RequestBody SellerRegistrationCO sellerRegistrationCO, HttpServletRequest httpServletRequest)
+    ResponseEntity<Response> register(@Valid @RequestBody SellerRegistrationCO sellerRegistrationCO, HttpServletRequest httpServletRequest)
     {
-        ResponseEntity<String> responseEntity = null;
+        ResponseEntity<Response> responseEntity = null;
+        Response response = new Response();
         Locale locale = httpServletRequest.getLocale();
         Seller seller= sellerService.createSellerAccount(sellerRegistrationCO);
         sellerService.triggerSellerRegistrationConfirmationEmail(seller,locale);
-        responseEntity = ResponseEntity.status(HttpStatus.CREATED).body("Registration for Seller Successful.");
+        response.setResponseMessage("Registration for Seller Successful.");
+        responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);
         System.out.printf("Seller Registered.");
         return responseEntity;
     }
@@ -55,42 +58,42 @@ public class SellerController
     }
 
     @PostMapping("/profileUpdate")
-    public String updateProfile(@RequestBody SellerRegistrationCO sellerRegistrationCO)
+    public Response updateProfile(@RequestBody SellerRegistrationCO sellerRegistrationCO)
     {
-        String response =null;
-        response= sellerService.updateProfile(sellerRegistrationCO);
+        Response response = new Response();
+        response.setResponseMessage(sellerService.updateProfile(sellerRegistrationCO));
         return response;
     }
 
     @PostMapping("/passwordUpdate")
-    public String updatePassword(@Valid @RequestBody PasswordResetCO passwordResetCO)
+    public Response updatePassword(@Valid @RequestBody PasswordResetCO passwordResetCO)
     {
-        String response =null;
-        response= sellerService.updatePassword(passwordResetCO);
+        Response response = new Response();
+        response.setResponseMessage(sellerService.updatePassword(passwordResetCO));
         return response;
     }
 
     @PostMapping("/addAddress")
-    public String addAddress(@RequestBody AddressCO addressCO)
+    public Response addAddress(@RequestBody AddressCO addressCO)
     {
-        String response =null;
-        response= sellerService.addAddress(addressCO);
+        Response response = new Response();
+        response.setResponseMessage(sellerService.addAddress(addressCO));
         return response;
     }
 
     @PostMapping("/deleteAddress/{id}")
-    public String deleteAddress(@PathVariable Long addressId)
+    public Response deleteAddress(@PathVariable Long addressId)
     {
-        String response =null;
-        response= sellerService.deleteAddress(addressId);
+        Response response = new Response();
+        response.setResponseMessage(sellerService.deleteAddress(addressId));
         return response;
     }
 
     @PostMapping("/updateAddress")
-    public String updateAddress(@RequestBody AddressCO addressCO)
+    public Response updateAddress(@RequestBody AddressCO addressCO)
     {
-        String response =null;
-        response= sellerService.updateAddress(addressCO);
+        Response response = new Response();
+        response.setResponseMessage(sellerService.updateAddress(addressCO));
         return response;
     }
 
